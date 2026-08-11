@@ -21,6 +21,11 @@ Everything else the keyboard can do is unsupported. The commands are not
 captured. See
 [reference/f99/protocol.md](reference/f99/protocol.md#not-captured-yet).
 
+For the full feature list, including features not yet discussed, see
+[feature-tracking.md](feature-tracking.md). That page tracks every OEM
+software feature and every hardware-only capability, with its build
+status and its place in the TUI.
+
 ## Module reference
 
 | Module | Responsibility |

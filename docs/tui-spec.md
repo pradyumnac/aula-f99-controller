@@ -3,9 +3,10 @@
 This page specifies the terminal interface. It records decisions, not
 current behaviour. Items marked "Open" are not decided yet.
 
-For what the code does today, see [spec.md](spec.md). For the feature
-baseline this interface targets, see
-[reference/f99/gui-features.md](reference/f99/gui-features.md).
+For what the code does today, see [spec.md](spec.md). For the full
+feature list and its build status, see
+[feature-tracking.md](feature-tracking.md). That page owns the per-feature
+status and CLI columns; this page owns UI structure only.
 
 ## Design rules
 
@@ -35,22 +36,27 @@ The main screen holds four regions.
 
 ## Sections
 
-The sidebar mirrors the OEM software, plus two sections of this project's
-own.
+The sidebar mirrors the OEM software, plus three sections of this
+project's own. For what each section contains and its status, see
+[feature-tracking.md](feature-tracking.md).
 
-| Section | Source | Purpose |
-| --- | --- | --- |
-| Status | This project | Connection state. Which link is active. Device identity. |
-| Lighting | OEM "Light effect" | Pick an effect. Set colour, brightness, and speed. |
-| Music | OEM "Effect" | Pick a sound-reactive effect. Set gain and smoothness. |
-| Keys | OEM "Key assignment" | Remap keys, per layer and per profile. |
-| Macros | OEM "Macro edit panel" | Record and edit macros. |
-| Settings | This project | Interface and device preferences. |
+| Section | Source |
+| --- | --- |
+| Status | This project |
+| Lighting | OEM "Light effect" |
+| Music | OEM "Effect" |
+| Keys | OEM "Key assignment" |
+| Macros | OEM "Macro edit panel" |
+| Keybindings | This project |
+| Settings | This project |
+
+Keybindings shows two lists side by side: the keyboard's factory `FN`
+shortcuts, and this project's own TUI key bindings. It needs no captured
+protocol -- both lists are static reference text.
 
 A section with no captured protocol shows a short "not implemented" note.
 It does not list the OEM features it cannot deliver. This keeps the
-interface lean and avoids implying that a feature exists. The full OEM
-list stays in [reference/f99/gui-features.md](reference/f99/gui-features.md).
+interface lean and avoids implying that a feature exists.
 
 ## Modals
 
@@ -117,16 +123,18 @@ tests, and documentation.
 | --- | --- | --- |
 | 1 | Deepen Status: live link state, model identity, and whatever else is readable without a write. | Next |
 | 2 | The shell: sidebar, theme, content switcher, footer, key-monitor modal. | Planned |
-| 3 | Settings, including XDG storage and the saved theme. | Planned |
-| 4 | Lighting: solid colour, with the confirm-write modal. | Planned |
-| 5+ | Any section whose protocol gets captured. | Blocked |
+| 3 | Keybindings: factory `FN` shortcuts and this project's own bindings, both static text. No protocol needed. | Planned |
+| 4 | Settings, including XDG storage and the saved theme. | Planned |
+| 5 | Lighting: solid colour, with the confirm-write modal. | Planned |
+| 6+ | Any section whose protocol gets captured. | Blocked |
 
-Slices 4 and later depend on captured commands. See
+Slices 5 and later depend on captured commands. See
 [reference/f99/protocol.md](reference/f99/protocol.md#not-captured-yet).
+
+For the status of individual features within a slice's section, see
+[feature-tracking.md](feature-tracking.md).
 
 ## Open questions
 
 1. Which keys move between sections?
 2. Does Status poll the link continuously, or refresh on demand?
-3. Can Status read the battery level? The keyboard shows it on the light
-   bar, but no read command is captured.
