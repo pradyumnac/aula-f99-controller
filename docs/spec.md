@@ -79,6 +79,13 @@ Use this method to identify a command that is not in this spec yet.
 5. Repeat for a similar action (for example, red vs. blue). Compare the two
    captures. The bytes that differ carry the setting you changed.
 
+## OEM software baseline
+
+The AULA OEM configuration software offers lighting effects, key remapping,
+and macros. See [reference/GUI-FEATURES.md](reference/GUI-FEATURES.md) for
+the full list. That page is a baseline for comparison. It does not describe
+this project's features.
+
 ## Default key bindings
 
 The keyboard's firmware handles FN shortcuts (lighting, OS mode, Bluetooth
