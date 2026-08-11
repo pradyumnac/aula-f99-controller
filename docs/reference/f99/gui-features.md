@@ -2,7 +2,7 @@
 
 This page records what the AULA OEM configuration software can do. It is a
 baseline for comparison. It does not say what this project implements. For
-the implemented feature list, see [../spec.md](../spec.md).
+the implemented feature list, see [../../spec.md](../../spec.md).
 
 Source: screenshots of the OEM software, supplied 2026-08-11. Items marked
 "Unconfirmed" could not be read reliably from the screenshots.
