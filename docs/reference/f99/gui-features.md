@@ -151,12 +151,18 @@ The picker has six tabs.
 
 | Tab | Contents |
 | --- | --- |
-| Keyboard | Standard keycodes. See the groups below. |
-| Mouse | Unconfirmed. Contents not captured. |
-| Multimedia | Unconfirmed. Contents not captured. |
-| Macro | Assigns a saved macro to the key. Contents not captured. |
-| Commands | Unconfirmed. Contents not captured. |
-| Key combination | Unconfirmed. Contents not captured. |
+| Keyboard | Standard keycodes |
+| Mouse | Mouse buttons and wheel steps |
+| Multimedia | Media keys and system shortcut keys |
+| Macro | A saved macro, plus a repeat rule |
+| Commands | Window and system commands |
+| Key combination | A key combination that you type in |
+
+Four of these tabs label their actions with icons only. They show no
+text. The names below are read from the icons. Treat each name as
+unconfirmed until it is checked against the software.
+
+#### Keyboard tab
 
 The Keyboard tab groups its keycodes into four blocks.
 
@@ -166,6 +172,65 @@ The Keyboard tab groups its keycodes into four blocks.
 | Adv | `F1`-`F12`, `Esc`, `Tab`, `App`, `Ins`, `End`, `Del`, `PgDn`, `PgUp`, `Back`, `Home`, `CapsLk`, `Pause`, `Enter`, `Space`, `Print`, `ScrollLk`, `Left`, `Right`, `Up`, `Down` |
 | Keypad | `Num0`-`Num9`, `Num +`, `Num -`, `Num *`, `Num /`, `Num .`, `Enter`, `NumLk` |
 | Modify | `LCtrl`, `LShift`, `LAlt`, `LWin`, `RCtrl`, `RShift`, `RAlt`, `RWin` |
+
+#### Mouse tab
+
+The tab offers 5 actions, in one row.
+
+| Order | Action |
+| --- | --- |
+| 1 | Left button |
+| 2 | Middle button |
+| 3 | Right button |
+| 4 | Wheel up |
+| 5 | Wheel down |
+
+The first three icons look alike. Their order is read from small
+differences in the icons. It is not confirmed.
+
+#### Multimedia tab
+
+The tab offers 14 actions, in two rows.
+
+| Row | Actions |
+| --- | --- |
+| 1 | Play / Pause, Mute, Stop, Previous track, Next track, Volume up, Volume down |
+| 2 | Home page, Calculator, Email, My computer, Favourites, Brightness up, Brightness down |
+
+Row 1 matches the Consumer Control keys this project already reads. See
+[protocol.md](protocol.md#consumer-control-reports).
+
+#### Macro tab
+
+This tab assigns a saved macro to the key. It shows the same macro group
+tree as the macro editor. It adds a repeat rule.
+
+| Repeat rule | Effect |
+| --- | --- |
+| Cycle until the key released | The macro repeats while you hold the key. |
+| Cycle until any key pressed | The macro repeats until any key is pressed. |
+| Cycle times | The macro repeats a set number of times. A number field holds the count. |
+
+`Cycle times` was selected in the screenshot, with a count of 1.
+
+#### Commands tab
+
+The tab offers 13 actions, in two rows. It shows no text at all, so every
+name below is read from an icon.
+
+| Row | Actions |
+| --- | --- |
+| 1 | Close, Lock, Sign out, Maximise, Minimise, Show desktop, Task list |
+| 2 | Undo, Save, Cancel, Start menu, Switch window, Refresh |
+
+#### Key combination tab
+
+The tab holds one text field, labelled "Please enter a single key or key
+combination". Below it sit four modifier checkboxes: `Ctrl`, `Win`,
+`Alt`, and `Shift`.
+
+This tab differs from the Keyboard tab. The Keyboard tab assigns one
+keycode. This tab assigns a modifier plus a key, for example `Ctrl` + `C`.
 
 ## Macros
 
@@ -179,6 +244,9 @@ right.
 | Event list | The ordered steps of the selected macro. Double-click a step to edit it. |
 | Event toolbar | Save, delete, and add. |
 | Record | Captures key presses into the event list. |
+
+A macro holds no repeat rule of its own. The repeat rule belongs to the
+key that runs it. See the [Macro tab](#macro-tab).
 
 Each event holds three fields.
 
@@ -205,6 +273,8 @@ These points need a check against the OEM software or the keyboard:
 5. The manual and the vendor listing both state five music-reactive
    modes. The software lists ten effects across six suffix values. Which
    count is correct?
-6. What actions do the `Commands` and `Key combination` tabs offer?
+6. The `Commands`, `Mouse`, and `Multimedia` tabs label their actions
+   with icons only. What is each action's real name? Hover text or the
+   OEM manual would settle this.
 7. How does `Self-define` set per-key colors? The hardware supports
    per-key RGB, so this is the mode that would use it.
