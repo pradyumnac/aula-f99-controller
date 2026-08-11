@@ -3,9 +3,9 @@
 This page specifies the terminal interface. It records decisions, not
 current behaviour. Items marked "Open" are not decided yet.
 
-For what the code does today, see [../spec.md](../spec.md). For the
-feature baseline this interface targets, see
-[f99/gui-features.md](f99/gui-features.md).
+For what the code does today, see [spec.md](spec.md). For the feature
+baseline this interface targets, see
+[reference/f99/gui-features.md](reference/f99/gui-features.md).
 
 ## Design rules
 
@@ -50,7 +50,7 @@ own.
 A section with no captured protocol shows a short "not implemented" note.
 It does not list the OEM features it cannot deliver. This keeps the
 interface lean and avoids implying that a feature exists. The full OEM
-list stays in [f99/gui-features.md](f99/gui-features.md).
+list stays in [reference/f99/gui-features.md](reference/f99/gui-features.md).
 
 ## Modals
 
@@ -106,7 +106,7 @@ Bindings are Open, except for the rules above. The set must cover:
 - Quit.
 
 Do not reuse a binding that the keyboard itself uses. See
-[f99/keybindings.md](f99/keybindings.md).
+[reference/f99/keybindings.md](reference/f99/keybindings.md).
 
 ## Vertical slices
 
@@ -122,7 +122,7 @@ tests, and documentation.
 | 5+ | Any section whose protocol gets captured. | Blocked |
 
 Slices 4 and later depend on captured commands. See
-[f99/protocol.md](f99/protocol.md#not-captured-yet).
+[reference/f99/protocol.md](reference/f99/protocol.md#not-captured-yet).
 
 ## Open questions
 

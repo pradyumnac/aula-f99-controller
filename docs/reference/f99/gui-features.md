@@ -1,11 +1,16 @@
 # OEM software feature baseline
 
 This page records what the AULA OEM configuration software can do. It is a
-baseline for comparison. It does not say what this project implements. For
-the implemented feature list, see [../../spec.md](../../spec.md).
+baseline for comparison.
 
 Source: screenshots of the OEM software, supplied 2026-08-11. Items marked
 "Unconfirmed" could not be read reliably from the screenshots.
+
+The vendor states that macros, custom key functions, and the
+music-reactive lighting all need this software. The firmware alone does
+not provide them. The `FN` shortcuts in
+[keybindings.md](keybindings.md) are what the firmware provides on its
+own.
 
 ## Screens
 
@@ -52,7 +57,13 @@ for animated effects. This rule is inferred from two samples. It is not
 confirmed for the other effects.
 
 `Self-define` is assumed to be the per-key custom mode. Its editing
-controls were not captured.
+controls were not captured. The keyboard does have per-key RGB in
+hardware, so a per-key mode is possible. See
+[hardware.md](hardware.md#lighting-hardware).
+
+These effects light the keys only. The keycaps are not shine-through, so
+no effect lights a legend. The RGB ambient light bar has its own separate
+controls, which this screen does not show.
 
 ## Music-reactive effects
 
@@ -76,8 +87,9 @@ Each effect name carries a mood or genre suffix.
 | Raining like silk | regular |
 
 The suffixes take six distinct values: `soft`, `rock`, `routine`, `voice`,
-`regular`, and `passion`. The product manual mentions five modes for this
-feature. The two counts do not agree. See
+`regular`, and `passion`. Both the product manual and the vendor listing
+state that this feature has five modes. Neither count matches the ten
+effects and six suffixes seen in the software. See
 [Open questions](#open-questions).
 
 Controls for this screen:
@@ -190,7 +202,9 @@ These points need a check against the OEM software or the keyboard:
 3. Is the hex field really in `BBGGRR` order, or is the mismatch a
    display bug?
 4. What does the `Tap` layer do? Does it hold a tap-versus-hold action?
-5. The manual states five music-reactive modes. The software lists ten
-   effects across six suffix values. Which count is correct?
+5. The manual and the vendor listing both state five music-reactive
+   modes. The software lists ten effects across six suffix values. Which
+   count is correct?
 6. What actions do the `Commands` and `Key combination` tabs offer?
-7. How does `Self-define` set per-key colors?
+7. How does `Self-define` set per-key colors? The hardware supports
+   per-key RGB, so this is the mode that would use it.

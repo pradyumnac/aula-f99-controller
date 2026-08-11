@@ -74,7 +74,7 @@ Writes over the cable fail today. See
 ## Terminal interface
 
 The interface design is specified in
-[reference/tui-spec.md](reference/tui-spec.md).
+[reference/tui-spec.md](tui-spec.md).
 
 ## mise tasks
 

@@ -57,11 +57,15 @@ The OEM software offers many more features. None of their commands are
 captured. See [gui-features.md](gui-features.md) for the full list. The
 largest gaps are:
 
-- Per-key RGB
+- Per-key RGB. The hardware supports it. See
+  [hardware.md](hardware.md#lighting-hardware).
 - The 15 lighting effects, and their speed and brightness values
-- The RGB ambient light bar
+- The RGB ambient light bar. It is a separate lighting system with its own
+  mode, colour, brightness, and speed.
 - Key remapping across the 4 layers
 - Macros
+- Battery level. The keyboard shows it on the light bar, but no read
+  command is known.
 
 The wired vendor channel (`0xff00`) also rejects writes today. The `hid`
 write call returns `-1`. Three collections share the same usage page and

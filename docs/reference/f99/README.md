@@ -16,6 +16,7 @@ outside this folder.
 | Source | Used for |
 | --- | --- |
 | AULA F99 product manual | Hardware and key bindings. Kept locally at `docs/AULA_F99_Manual.pdf`. Not committed. |
+| Vendor product listing | Product identity, warranty, and lighting hardware details. |
 | OEM software screenshots | The feature baseline. |
 | OpenRGB project | The USB protocol. Links in [protocol.md](protocol.md). |
 | Direct observation | USB enumeration and Consumer Control reports from a real device. |

@@ -3,8 +3,19 @@
 This page describes the physical keyboard: its layout, controls, ports,
 and indicators.
 
-Source: the AULA F99 product manual. The manual is kept locally at
-`docs/AULA_F99_Manual.pdf`. It is not committed.
+Sources: the AULA F99 product manual and the vendor product listing. The
+manual is kept locally at `docs/AULA_F99_Manual.pdf`. It is not committed.
+
+## Product identity
+
+| Field | Value |
+| --- | --- |
+| Product name | F99 Mechanical gaming keyboard |
+| SKU | `F99UWCr` |
+| Warranty | 1 year from the date of purchase. Manufacturing defects only. |
+
+The vendor states that the listed colour does not match the physical
+product exactly.
 
 ## Layout
 
@@ -16,9 +27,9 @@ drops the dedicated Insert, Print Screen, Scroll Lock, and Pause keys.
 | Property | Value |
 | --- | --- |
 | Keys | 99 |
-| Construction | Gasket mount |
+| Construction | Gasket mount. The vendor describes the feel as soft and flexible. |
 | Switches | Mechanical, hot-swap (pluggable) |
-| Keycaps | Pluggable |
+| Keycaps | Pluggable. Not shine-through. |
 | Dimensions | 390.63 x 146.78 x 42.57 mm, +/- 0.5 mm |
 | Weight | 1183 g |
 
@@ -46,6 +57,27 @@ The mode switch has three positions.
 Software cannot read or change this switch. The manual calls it the "upper
 left" switch in its text, and shows it on the rear edge in its diagram.
 Both refer to the same slider.
+
+## Lighting hardware
+
+| Property | Value |
+| --- | --- |
+| Per-key RGB | Yes. Every key has its own addressable LED. |
+| LED orientation | North-facing on every switch. |
+| Keycap legends | Not shine-through. The legends are not lit. |
+| Ambient light bar | RGB, on the side of the case. Separate from the key backlight. |
+
+Two facts change what lighting can look like on this keyboard:
+
+The keycaps are not see-through. Light escapes around and under each
+keycap, not through the legend. A lighting effect changes the glow around
+the keys. It never makes a legend readable in the dark.
+
+The LEDs face north. The LED sits at the top edge of each switch, away
+from the user. The top of each keycap is brighter than the bottom.
+
+Per-key RGB is a hardware capability. This project cannot use it yet. The
+command is not captured. See [protocol.md](protocol.md#not-captured-yet).
 
 ## Indicators
 
