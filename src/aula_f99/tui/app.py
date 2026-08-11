@@ -55,10 +55,7 @@ class MainScreen(Screen[None]):
 
 
 class ListenerScreen(Screen[None]):
-    """Dedicated full-screen mode: streams every consumer-control (media/
-    volume key) report as a toast notification until the user presses Escape.
-    Runs indefinitely -- no auto-timeout.
-    """
+    """Streams consumer-control key presses as toasts until Escape."""
 
     BINDINGS = [("escape", "back", "Back to main screen")]
 
@@ -79,8 +76,10 @@ class ListenerScreen(Screen[None]):
     def on_mount(self) -> None:
         self._run_stream(self._stop_event)
 
-    def action_back(self) -> None:
+    def on_unmount(self) -> None:
         self._stop_event.set()
+
+    def action_back(self) -> None:
         self.app.pop_screen()
 
     @work(thread=True)

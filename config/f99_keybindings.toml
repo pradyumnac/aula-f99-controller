@@ -1,0 +1,573 @@
+[[shortcut]]
+category = "Connection"
+shortcut = "FN + `"
+effect = "Select 2.4G wireless mode"
+detectable = false
+
+[[shortcut]]
+category = "Connection"
+shortcut = "FN + 1"
+effect = "Select Bluetooth slot 1"
+detectable = false
+
+[[shortcut]]
+category = "Connection"
+shortcut = "FN + 2"
+effect = "Select Bluetooth slot 2"
+detectable = false
+
+[[shortcut]]
+category = "Connection"
+shortcut = "FN + 3"
+effect = "Select Bluetooth slot 3"
+detectable = false
+
+[[shortcut]]
+category = "Connection"
+shortcut = "FN + Esc (hold 3s)"
+effect = "Restore factory defaults. Saved Bluetooth pairings stay."
+detectable = false
+
+[[shortcut]]
+category = "Operating system mode"
+shortcut = "FN + Q"
+effect = "Select Android OS mode"
+detectable = false
+
+[[shortcut]]
+category = "Operating system mode"
+shortcut = "FN + W"
+effect = "Select Windows OS mode"
+detectable = false
+
+[[shortcut]]
+category = "Operating system mode"
+shortcut = "FN + E"
+effect = "Select Mac OS mode"
+detectable = false
+
+[[shortcut]]
+category = "Operating system mode"
+shortcut = "FN + R"
+effect = "Select iOS OS mode"
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + \\|"
+effect = "Switch lighting mode. Cycles the 15 RGB light effects."
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + Tab"
+effect = "Switch colour"
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + Up"
+effect = "Brightness up"
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + Down"
+effect = "Brightness down"
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + Left"
+effect = "Speed down"
+detectable = false
+
+[[shortcut]]
+category = "Key backlight"
+shortcut = "FN + Right"
+effect = "Speed up"
+detectable = false
+
+[[shortcut]]
+category = "RGB ambient light bar"
+shortcut = "FN + Shift-R"
+effect = "Switch light bar mode"
+detectable = false
+
+[[shortcut]]
+category = "RGB ambient light bar"
+shortcut = "FN + /?"
+effect = "Switch light bar colour"
+detectable = false
+
+[[shortcut]]
+category = "RGB ambient light bar"
+shortcut = "FN + Alt-R"
+effect = "Cycle light bar brightness"
+detectable = false
+
+[[shortcut]]
+category = "RGB ambient light bar"
+shortcut = "FN + Ctrl-R"
+effect = "Cycle light bar speed"
+detectable = false
+
+[[shortcut]]
+category = "RGB ambient light bar"
+shortcut = "FN + B"
+effect = "Switch the light bar to power mode. It then shows the battery level."
+detectable = false
+
+[[shortcut]]
+category = "Missing keys"
+shortcut = "FN + Del"
+effect = "Sends Insert"
+detectable = false
+
+[[shortcut]]
+category = "Missing keys"
+shortcut = "FN + U"
+effect = "Sends Print Screen"
+detectable = false
+
+[[shortcut]]
+category = "Missing keys"
+shortcut = "FN + I"
+effect = "Sends Scroll Lock"
+detectable = false
+
+[[shortcut]]
+category = "Missing keys"
+shortcut = "FN + O"
+effect = "Sends Pause"
+detectable = false
+
+[[shortcut]]
+category = "Windows key lock"
+shortcut = "FN + left Win"
+effect = "Lock or unlock the left Windows key. Windows mode only."
+detectable = false
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F1"
+effect = "Home page"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F2"
+effect = "Email"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F3"
+effect = "Convert window"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F4"
+effect = "Open Explorer"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F5"
+effect = "Backlight brightness down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F6"
+effect = "Backlight brightness up"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F7"
+effect = "Previous track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F8"
+effect = "Play / Pause"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F9"
+effect = "Next track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F10"
+effect = "Mute"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F11"
+effect = "Volume down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Windows mode, FN combination)"
+shortcut = "FN + F12"
+effect = "Volume up"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F1"
+effect = "Screen brightness down"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F2"
+effect = "Screen brightness up"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F3"
+effect = "Convert window"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F4"
+effect = "Return to desktop"
+detectable = false
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F5"
+effect = "Backlight brightness down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F6"
+effect = "Backlight brightness up"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F7"
+effect = "Previous track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F8"
+effect = "Play / Pause"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F9"
+effect = "Next track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F10"
+effect = "Mute"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F11"
+effect = "Volume down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (Android/Mac mode, single press)"
+shortcut = "F12"
+effect = "Volume up"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F1"
+effect = "Screen brightness down"
+detectable = false
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F2"
+effect = "Screen brightness up"
+detectable = false
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F3"
+effect = "None -- no single-press action in this mode"
+detectable = false
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F4"
+effect = "Return to desktop"
+detectable = false
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F5"
+effect = "Backlight brightness down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F6"
+effect = "Backlight brightness up"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F7"
+effect = "Previous track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F8"
+effect = "Play / Pause"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F9"
+effect = "Next track"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F10"
+effect = "Mute"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F11"
+effect = "Volume down"
+detectable = true
+
+[[shortcut]]
+category = "F-row (iOS mode, single press)"
+shortcut = "F12"
+effect = "Volume up"
+detectable = true
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Play"
+detectable = true
+code = "0x00B0"
+short = "Play"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Pause"
+detectable = true
+code = "0x00B1"
+short = "Pause"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Fast Forward"
+detectable = true
+code = "0x00B3"
+short = "FF"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Rewind"
+detectable = true
+code = "0x00B4"
+short = "Rewind"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F9 (see F-row tables above)"
+effect = "Next Track"
+detectable = true
+code = "0x00B5"
+short = "Next"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F7 (see F-row tables above)"
+effect = "Previous Track"
+detectable = true
+code = "0x00B6"
+short = "Prev"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Stop"
+detectable = true
+code = "0x00B7"
+short = "Stop"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F8 (see F-row tables above)"
+effect = "Play/Pause"
+detectable = true
+code = "0x00CD"
+short = "Play/Pause"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Voice Command"
+detectable = true
+code = "0x00CF"
+short = "Voice"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F10 (see F-row tables above)"
+effect = "Mute"
+detectable = true
+code = "0x00E2"
+short = "Mute"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F12 (see F-row tables above)"
+effect = "Volume Increment"
+detectable = true
+code = "0x00E9"
+short = "Vol+"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F11 (see F-row tables above)"
+effect = "Volume Decrement"
+detectable = true
+code = "0x00EA"
+short = "Vol-"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F6 (see F-row tables above)"
+effect = "Display Brightness Increment"
+detectable = true
+code = "0x006F"
+short = "Bright+"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F5 (see F-row tables above)"
+effect = "Display Brightness Decrement"
+detectable = true
+code = "0x0070"
+short = "Bright-"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Media Select"
+detectable = true
+code = "0x0183"
+short = "Media"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F2 (see F-row tables above)"
+effect = "AL Email Reader"
+detectable = true
+code = "0x018A"
+short = "Mail"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AL Calculator"
+detectable = true
+code = "0x0192"
+short = "Calc"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AL Local Browser"
+detectable = true
+code = "0x0194"
+short = "Browser"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Search"
+detectable = true
+code = "0x0221"
+short = "Search"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = "F1 (see F-row tables above)"
+effect = "AC Home"
+detectable = true
+code = "0x0223"
+short = "Home"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Back"
+detectable = true
+code = "0x0224"
+short = "Back"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Forward"
+detectable = true
+code = "0x0225"
+short = "Forward"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Stop"
+detectable = true
+code = "0x0226"
+short = "Stop(AC)"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Refresh"
+detectable = true
+code = "0x0227"
+short = "Refresh"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "AC Bookmarks"
+detectable = true
+code = "0x022A"
+short = "Bookmarks"
+
+[[shortcut]]
+category = "Consumer Control code"
+shortcut = ""
+effect = "Unknown"
+detectable = true
+code = "0x0005"
+short = "0x0005"

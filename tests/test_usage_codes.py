@@ -2,45 +2,34 @@ from pathlib import Path
 
 import pytest
 
-from aula_f99 import usage_codes
+from aula_f99 import keybindings, usage_codes
 
 
 @pytest.fixture
 def config_path(tmp_path: Path) -> Path:
-    path = tmp_path / "consumer_usage.toml"
-    usage_codes.save_usage_map(
-        {
-            0x00E9: {"name": "Volume Increment", "short": "Vol+"},
-            0x00EA: {"name": "Volume Decrement", "short": "Vol-"},
-        },
+    path = tmp_path / "f99_keybindings.toml"
+    keybindings.save_keybindings(
+        [
+            keybindings.Shortcut(
+                category="Consumer Control code",
+                shortcut="",
+                effect="Volume Increment",
+                detectable=True,
+                code=0x00E9,
+                short="Vol+",
+            ),
+            keybindings.Shortcut(
+                category="Consumer Control code",
+                shortcut="",
+                effect="Volume Decrement",
+                detectable=True,
+                code=0x00EA,
+                short="Vol-",
+            ),
+        ],
         path=path,
     )
     return path
-
-
-def test_load_usage_map_roundtrip(config_path: Path):
-    mapping = usage_codes.load_usage_map(config_path)
-    assert mapping[0x00E9] == {"name": "Volume Increment", "short": "Vol+"}
-    assert mapping[0x00EA] == {"name": "Volume Decrement", "short": "Vol-"}
-
-
-def test_load_usage_map_missing_file_returns_empty(tmp_path: Path):
-    assert usage_codes.load_usage_map(tmp_path / "does_not_exist.toml") == {}
-
-
-def test_get_or_record_known_code_does_not_rewrite(config_path: Path):
-    before = config_path.read_text()
-    entry = usage_codes.get_or_record(0x00E9, path=config_path)
-    assert entry == {"name": "Volume Increment", "short": "Vol+"}
-    assert config_path.read_text() == before
-
-
-def test_get_or_record_unknown_code_appends_stub(config_path: Path):
-    entry = usage_codes.get_or_record(0x1234, path=config_path)
-    assert entry == {"name": "Unknown", "short": "0x1234"}
-
-    reloaded = usage_codes.load_usage_map(config_path)
-    assert reloaded[0x1234] == {"name": "Unknown", "short": "0x1234"}
 
 
 def test_is_release_report():
@@ -68,3 +57,12 @@ def test_format_event_release_report_is_none(config_path: Path):
 def test_format_event_known_code(config_path: Path):
     text = usage_codes.format_event(bytes([0xE9, 0x00]), path=config_path)
     assert text == "Vol+ (Raw: 0x00E9)"
+
+
+def test_format_event_unknown_code_records_stub(config_path: Path):
+    text = usage_codes.format_event(bytes([0x34, 0x12]), path=config_path)
+    assert text == "0x1234 (Raw: 0x1234)"
+
+    reloaded = keybindings.lookup_by_code(0x1234, path=config_path)
+    assert reloaded is not None
+    assert reloaded.effect == "Unknown"

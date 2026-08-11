@@ -98,7 +98,7 @@ These rules apply to every file the program writes.
 | Text only | Every saved file is plain text. No binary formats, no databases. |
 | Stow-friendly | The layout suits GNU stow, so the user can keep these files in a dotfiles repository. |
 
-`config/consumer_usage.toml` currently lives inside the repository. It
+`config/f99_keybindings.toml` currently lives inside the repository. It
 must move to the XDG config path. The move needs a fallback so an existing
 in-repo file still loads.
 

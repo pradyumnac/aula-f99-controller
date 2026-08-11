@@ -20,7 +20,8 @@ below says where implemented code lives, not what is implemented.
 | [`protocol.py`](../src/aula_f99/protocol.py) | Packet layouts, device IDs, checksum |
 | [`controller.py`](../src/aula_f99/controller.py) | Opens the vendor HID device. Sends write commands. |
 | [`detect.py`](../src/aula_f99/detect.py) | Read-only connection detection and key-press listening |
-| [`usage_codes.py`](../src/aula_f99/usage_codes.py) | Consumer usage code to name mapping, backed by TOML |
+| [`usage_codes.py`](../src/aula_f99/usage_codes.py) | Parses a raw Consumer Control report: release detection, usage-code extraction, display formatting |
+| [`keybindings.py`](../src/aula_f99/keybindings.py) | Every known FN shortcut, and the Consumer Control usage-code lookup table, backed by TOML |
 | [`cli.py`](../src/aula_f99/cli.py) | Command-line entry point |
 | [`tui/app.py`](../src/aula_f99/tui/app.py) | The terminal interface |
 
@@ -34,20 +35,35 @@ below says where implemented code lives, not what is implemented.
 | `probe_active_link()` | Listens once. Returns the link that delivers a report first. Returns as soon as one arrives. |
 | `stream_consumer_events()` | Listens continuously. Calls a callback per report until told to stop. |
 
-### Usage code lookup
+### Keybinding reference and usage code lookup
 
-`usage_codes.py` maps a Consumer Control usage code to a display name. The
-mapping lives in
-[`config/consumer_usage.toml`](../config/consumer_usage.toml), not in
-code. The file is meant to be edited by hand.
+`keybindings.py` reads the F99's FN shortcut reference and the live
+Consumer Control usage-code lookup table. Both live in
+[`config/f99_keybindings.toml`](../config/f99_keybindings.toml), not in
+code. The reference covers every shortcut in
+[keybindings.md](reference/f99/keybindings.md) except the plain (non-`FN`)
+F-key press in Windows mode and the `FN`+F-key combination in
+Android/Mac/iOS mode -- both just send the ordinary F-key, which this
+project cannot observe (see
+[protocol.md](reference/f99/protocol.md#windows-hid-read-restriction)).
+The file is meant to be edited by hand; runtime code only appends
+`"Unknown"` stubs for codes it hasn't seen before.
 
 | Function | Behaviour |
 | --- | --- |
-| `load_usage_map()` | Reads the file. |
-| `save_usage_map()` | Writes the file. |
-| `get_or_record()` | Looks up a code. Appends an `"Unknown"` stub for a new code, so it is not lost. |
+| `load_keybindings()` | Reads every row from the file. |
+| `save_keybindings()` | Writes the file. |
+| `lookup_by_code()` | Finds the row for a usage code, if any. |
+| `record_unknown_code()` | Looks up a code. Appends an `"Unknown"` stub for a new code, so it is not lost. |
+
+`usage_codes.py` turns a raw report into a display string using that
+lookup table.
+
+| Function | Behaviour |
+| --- | --- |
 | `format_event()` | Turns a raw report into a display string, for example `"Vol+ (Raw: 0x00E9)"`. |
 | `is_release_report()` | Reports whether a report is a key release. |
+| `extract_code()` | Pulls the usage code out of a report of unconfirmed byte layout. |
 
 ## CLI reference
 

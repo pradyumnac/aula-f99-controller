@@ -149,7 +149,7 @@ this table: read-only reference, no protocol needed.
 
 | Feature | Status | Writes to device? | TUI location | CLI | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Show the keyboard's factory FN shortcuts | Planned | No | Keybindings | -- | Source: [keybindings.md](reference/f99/keybindings.md). Fixed reference text, not read from the device. |
+| Show the keyboard's factory FN shortcuts | Planned | No | Keybindings | -- | Source: [keybindings.md](reference/f99/keybindings.md), transcribed into [`config/f99_keybindings.toml`](../config/f99_keybindings.toml). Data and loader exist ([`keybindings.py`](../src/aula_f99/keybindings.py)); no screen shows it yet -- waiting on the Keybindings section (slice 3). |
 | Show this project's own TUI key bindings | Planned | No | Keybindings | -- | Depends on the binding set landing in slice 2. |
 
 ## Settings
