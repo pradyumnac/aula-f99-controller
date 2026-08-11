@@ -20,7 +20,7 @@ It talks straight to the keyboard's own USB interface.
 ## ✨ Features
 
 | | |
-|---|---|
+| --- | --- |
 | 🔌 | Check the keyboard's connection status |
 | 🎧 | Watch media-key and volume-knob presses live |
 | 🎨 | Set a solid RGB color |
@@ -59,7 +59,7 @@ mise run tui
 In the TUI:
 
 | Key | Action |
-|---|---|
+| --- | --- |
 | `r` | Refresh the connection status |
 | `t` | Enter key-press listener mode (press a media key, a volume key, or turn the volume knob — each press pops a notification) |
 | `Escape` | Leave listener mode |

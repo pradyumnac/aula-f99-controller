@@ -1,0 +1,15 @@
+{
+  // Start from markdownlint's recommended rule set, then adjust for
+  // GitHub-flavored Markdown patterns this project actually uses
+  // (centered HTML banner + badges in README.md).
+  "config": {
+    "default": true,
+    "MD013": false, // line-length -- prose isn't hard-wrapped; tables/badges run long
+    "MD033": { "allowed_elements": ["div"] }, // allow the README's centering wrapper
+    "MD041": false // first line doesn't have to be a heading (README opens with the div)
+  },
+  "gitignore": true,
+  // Vendored third-party content (Apache 2.0, kept verbatim with
+  // attribution) -- not ours to reformat.
+  "ignores": [".agents/skills/docs-diataxis/SKILL.md"]
+}

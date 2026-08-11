@@ -26,9 +26,13 @@ run = "uv run ruff format --check ."
 description = "Static type-check with mypy"
 run = "uv run mypy"
 
+[tasks."lint:md"]
+description = "Lint Markdown files (via pre-commit's markdownlint-cli2)"
+run = "uv run pre-commit run markdownlint-cli2 --all-files"
+
 [tasks.check]
-description = "Run lint, format-check, typecheck, and tests"
-depends = ["lint", "format:check", "typecheck", "test"]
+description = "Run lint, format-check, typecheck, markdown-lint, and tests"
+depends = ["lint", "format:check", "typecheck", "lint:md", "test"]
 
 [tasks."precommit:install"]
 description = "Install the pre-commit git hook"

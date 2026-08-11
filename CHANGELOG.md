@@ -7,11 +7,13 @@ versioning follows [SemVer](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+
 - Initial project scaffold (mise + uv + pyproject.toml).
 - Sinowealth wireless protocol port: model query, solid-color control.
 - `aula-f99` CLI (`color`, `model` subcommands).
 
 ### Known issues
+
 - Wired-mode (`VID_258A:PID_010C`, usage page `0xff00`) writes fail — report
   structure differs from the wireless dongle's and hasn't been captured yet.
 - Per-key RGB, lighting effects, brightness/speed, and macro programming are

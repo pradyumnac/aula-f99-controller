@@ -8,7 +8,7 @@ code that talks to it. For an introduction, read the [README](../README.md).
 The keyboard can connect two ways. Each way uses a different USB ID.
 
 | Mode | VID | PID | Usage page | Usage |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Wireless (2.4G dongle) | `0x3554` | `0xfa09` | `0xff02` | `0x0002` |
 | Wired (USB cable) | `0x258a` | `0x010c` | `0xff00` | `0x0001` |
 
@@ -34,7 +34,7 @@ Control commands (LED color, model query) go through the vendor-defined HID
 collection listed above. Each report is 20 bytes.
 
 | Byte | Meaning |
-|---|---|
+| --- | --- |
 | 0 | Fixed header byte: `0x13` |
 | 1 | Command ID (see table below) |
 | 2-18 | Command-specific payload |
@@ -43,7 +43,7 @@ collection listed above. Each report is 20 bytes.
 ### Known commands
 
 | Command | Byte 1 | Payload | Status |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Model query | `0x05` | none | Implemented |
 | LED control (solid color) | `0x88` | byte 2 = `0x01`, byte 3 = `0x00`, byte 4 = `0x23`, bytes 5-7 = R, G, B | Implemented |
 
@@ -127,7 +127,7 @@ whichever one matches an already-known code.
 ## Module reference
 
 | Module | Responsibility |
-|---|---|
+| --- | --- |
 | [`protocol.py`](../src/aula_f99/protocol.py) | Packet layouts, device IDs, checksum |
 | [`controller.py`](../src/aula_f99/controller.py) | Opens the vendor HID device, sends write commands (`set_solid_color`, `query_model`) |
 | [`detect.py`](../src/aula_f99/detect.py) | Read-only connection detection and key-press listening |
@@ -140,7 +140,7 @@ whichever one matches an already-known code.
 Entry point: `aula-f99` (see [`pyproject.toml`](../pyproject.toml) scripts).
 
 | Command | Effect | Writes to device? |
-|---|---|---|
+| --- | --- | --- |
 | `aula-f99 model` | Query and print the model name | Yes |
 | `aula-f99 color R G B` | Set a solid RGB color | Yes |
 | `aula-f99 tui` | Launch the interactive TUI | No (read-only until you use TUI features that write) |
@@ -153,7 +153,7 @@ wireless dongle.
 Defined in [`mise.toml`](../mise.toml).
 
 | Task | Effect |
-|---|---|
+| --- | --- |
 | `mise run tui` | Launch the TUI |
 | `mise run test` | Run the test suite |
 | `mise run lint` | Lint with ruff |
