@@ -1,0 +1,74 @@
+[project]
+name = "aula-f99-controller"
+version = "0.1.0"
+description = "Custom control software for the AULA F99 keyboard (RGB, macros) via its vendor HID protocol"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [
+    { name = "Pradyumna", email = "pady92@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Hardware",
+]
+dependencies = [
+    "hidapi>=0.14.0",
+    "textual>=8.2.8",
+    "tomli-w>=1.2.0",
+]
+
+[project.urls]
+Repository = "https://github.com/pradyumnac/aula-f99-controller"
+
+[project.scripts]
+aula-f99 = "aula_f99.cli:main"
+aula-f99-tui = "aula_f99.tui.app:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aula_f99"]
+
+[dependency-groups]
+dev = [
+    "detect-secrets>=1.5.0",
+    "mypy>=2.3.0",
+    "pre-commit>=4.6.2",
+    "pytest>=8.0",
+    "ruff>=0.16.2",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "tests"]
+mypy_path = "stubs"
+strict = true
+warn_unused_ignores = true
+disallow_any_explicit = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+disallow_incomplete_defs = false

@@ -1,0 +1,108 @@
+# USB HID Usage Tables, Consumer page (0x0C) -- maps the 16-bit usage code
+# to a short label (shown in TUI notifications) and a full name.
+#
+# Populated from the standard USB HID Usage Tables spec, common subset found
+# on gaming-keyboard media-key rows / volume knobs. Codes seen on this
+# specific keyboard that aren't in this list yet get auto-appended here as
+# "Unknown" stubs by aula_f99.usage_codes -- edit them in by hand once
+# identified.
+
+["0x00B0"]
+name = "Play"
+short = "Play"
+
+["0x00B1"]
+name = "Pause"
+short = "Pause"
+
+["0x00B3"]
+name = "Fast Forward"
+short = "FF"
+
+["0x00B4"]
+name = "Rewind"
+short = "Rewind"
+
+["0x00B5"]
+name = "Next Track"
+short = "Next"
+
+["0x00B6"]
+name = "Previous Track"
+short = "Prev"
+
+["0x00B7"]
+name = "Stop"
+short = "Stop"
+
+["0x00CD"]
+name = "Play/Pause"
+short = "Play/Pause"
+
+["0x00CF"]
+name = "Voice Command"
+short = "Voice"
+
+["0x00E2"]
+name = "Mute"
+short = "Mute"
+
+["0x00E9"]
+name = "Volume Increment"
+short = "Vol+"
+
+["0x00EA"]
+name = "Volume Decrement"
+short = "Vol-"
+
+["0x006F"]
+name = "Display Brightness Increment"
+short = "Bright+"
+
+["0x0070"]
+name = "Display Brightness Decrement"
+short = "Bright-"
+
+["0x0183"]
+name = "Media Select"
+short = "Media"
+
+["0x018A"]
+name = "AL Email Reader"
+short = "Mail"
+
+["0x0192"]
+name = "AL Calculator"
+short = "Calc"
+
+["0x0194"]
+name = "AL Local Browser"
+short = "Browser"
+
+["0x0221"]
+name = "AC Search"
+short = "Search"
+
+["0x0223"]
+name = "AC Home"
+short = "Home"
+
+["0x0224"]
+name = "AC Back"
+short = "Back"
+
+["0x0225"]
+name = "AC Forward"
+short = "Forward"
+
+["0x0226"]
+name = "AC Stop"
+short = "Stop(AC)"
+
+["0x0227"]
+name = "AC Refresh"
+short = "Refresh"
+
+["0x022A"]
+name = "AC Bookmarks"
+short = "Bookmarks"

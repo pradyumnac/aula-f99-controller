@@ -1,0 +1,43 @@
+[tools]
+python = "3.12.13"
+uv = "latest"
+
+[tasks.tui]
+description = "Launch the aula-f99 TUI"
+run = "uv run aula-f99 tui"
+
+[tasks.test]
+description = "Run the test suite"
+run = "uv run pytest"
+
+[tasks.lint]
+description = "Lint with ruff"
+run = "uv run ruff check ."
+
+[tasks.format]
+description = "Format with ruff"
+run = "uv run ruff format ."
+
+[tasks."format:check"]
+description = "Check formatting without writing changes"
+run = "uv run ruff format --check ."
+
+[tasks.typecheck]
+description = "Static type-check with mypy"
+run = "uv run mypy"
+
+[tasks.check]
+description = "Run lint, format-check, typecheck, and tests"
+depends = ["lint", "format:check", "typecheck", "test"]
+
+[tasks."precommit:install"]
+description = "Install the pre-commit git hook"
+run = "uv run pre-commit install"
+
+[tasks."precommit:run"]
+description = "Run all pre-commit hooks against the full repo"
+run = "uv run pre-commit run --all-files"
+
+[tasks."secrets:baseline"]
+description = "Regenerate the detect-secrets baseline after reviewing new findings"
+run = "uv run detect-secrets scan > .secrets.baseline"
