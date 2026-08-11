@@ -8,8 +8,6 @@
 ![Python](https://img.shields.io/badge/python-3.12-blue?logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tests](https://img.shields.io/badge/tests-18%20passing-brightgreen)
-![Lint](https://img.shields.io/badge/lint-ruff-red?logo=ruff&logoColor=white)
-![Types](https://img.shields.io/badge/types-mypy%20strict-blue)
 
 </div>
 

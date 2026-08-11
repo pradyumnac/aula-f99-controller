@@ -79,6 +79,12 @@ Use this method to identify a command that is not in this spec yet.
 5. Repeat for a similar action (for example, red vs. blue). Compare the two
    captures. The bytes that differ carry the setting you changed.
 
+## Default key bindings
+
+The keyboard's firmware handles FN shortcuts (lighting, OS mode, Bluetooth
+pairing) on its own, with no driver needed. See
+[reference/keybindings.md](reference/keybindings.md) for the full list.
+
 ## Windows HID read restriction
 
 Windows blocks raw HID reads from the standard keyboard usage page (usage

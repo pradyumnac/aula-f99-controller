@@ -9,6 +9,9 @@ build/
 .ruff_cache/
 *.pcapng
 
+# vendor reference material -- not ours to redistribute
+docs/AULA_F99_Manual.pdf
+
 # OS/editor cruft
 .DS_Store
 Thumbs.db
