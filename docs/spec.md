@@ -6,25 +6,12 @@ tooling. For an introduction, read the [README](../README.md).
 Facts about the keyboard itself live in
 [reference/f99/](reference/f99/README.md). This page does not repeat them.
 
-## What works today
+## Feature status
 
-| Feature | Module | Writes to device? |
-| --- | --- | --- |
-| Detect wired and wireless enumeration | `detect.py` | No |
-| Detect which link is live, from a key press | `detect.py` | No |
-| Stream media and volume key presses | `detect.py` | No |
-| Name a Consumer Control usage code | `usage_codes.py` | No |
-| Set a solid RGB colour | `controller.py` | Yes |
-| Query the model ID | `controller.py` | Yes |
-
-Everything else the keyboard can do is unsupported. The commands are not
-captured. See
-[reference/f99/protocol.md](reference/f99/protocol.md#not-captured-yet).
-
-For the full feature list, including features not yet discussed, see
-[feature-tracking.md](feature-tracking.md). That page tracks every OEM
-software feature and every hardware-only capability, with its build
-status and its place in the TUI.
+[feature-tracking.md](feature-tracking.md) is the single list of every
+feature: what is implemented, what is planned, and what is still waiting
+for discussion. This page does not repeat that list. The module reference
+below says where implemented code lives, not what is implemented.
 
 ## Module reference
 
@@ -66,15 +53,16 @@ code. The file is meant to be edited by hand.
 
 Entry point: `aula-f99`.
 
-| Command | Effect | Writes to device? |
-| --- | --- | --- |
-| `aula-f99 model` | Query and print the model name | Yes |
-| `aula-f99 color R G B` | Set a solid RGB colour | Yes |
-| `aula-f99 tui` | Launch the terminal interface | Only when you use a feature that writes |
+| Command | Effect |
+| --- | --- |
+| `aula-f99 tui` | Launch the terminal interface |
 
 Add `--wired` to any command to use the cable instead of the dongle.
 Writes over the cable fail today. See
 [reference/f99/protocol.md](reference/f99/protocol.md#not-captured-yet).
+
+Each feature's own CLI switch, if it has one, is listed in
+[feature-tracking.md](feature-tracking.md).
 
 ## Terminal interface
 

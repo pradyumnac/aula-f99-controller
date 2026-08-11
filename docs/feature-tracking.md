@@ -48,10 +48,10 @@ Connection state, device identity, and other read-only facts.
 | Active-link proof, from a key press | Implemented | No | Status | -- | `probe_active_link()`. One-shot. |
 | Continuous key-press monitor | Implemented | No | Key monitor (modal) | -- | `stream_consumer_events()`. |
 | Model query | Implemented | Yes | Status (planned, slice 1) | `aula-f99 model` | Returns F99 or F75. |
-| Battery level readout | Flagged -- uncertain | Unknown | Status | -- | Keyboard shows it on the light bar (`FN+B`). No read command is known. |
-| OS mode readout (Android/Windows/Mac/iOS) | Flagged -- uncertain | Unknown | Status | -- | Set by `FN+Q/W/E/R`. Whether it can be read back is not known. |
-| Bluetooth connection state | Flagged -- uncertain | Unknown | Status | -- | BT mode presents no USB device. Likely unreachable by this project. |
-| Mode-switch position (2.4G / Wired / BT) | Flagged -- uncertain | No | Status | -- | Confirmed unreadable by software. Physical switch only. |
+| Battery level readout | Flagged -- uncertain | Unknown | Status | -- | See [protocol.md](reference/f99/protocol.md#not-captured-yet). |
+| OS mode readout (Android/Windows/Mac/iOS) | Flagged -- uncertain | Unknown | Status | -- | Set by `FN+Q/W/E/R`. See [keybindings.md](reference/f99/keybindings.md#operating-system-mode). |
+| Bluetooth connection state | Flagged -- uncertain | Unknown | Status | -- | See [protocol.md](reference/f99/protocol.md#device-identifiers). |
+| Mode-switch position (2.4G / Wired / BT) | Flagged -- uncertain | No | Status | -- | See [hardware.md](reference/f99/hardware.md#rear-edge). |
 
 ## Lighting (key backlight)
 
@@ -66,7 +66,7 @@ See [gui-features.md](reference/f99/gui-features.md#light-effects).
 | Flash_away | Waiting for discussion | Unknown | Lighting | -- | |
 | Raindrops | Waiting for discussion | Unknown | Lighting | -- | |
 | Ripples_shining | Waiting for discussion | Unknown | Lighting | -- | |
-| Stars_twinkle | Waiting for discussion | Unknown | Lighting | -- | Only effect confirmed to show a Speed control. |
+| Stars_twinkle | Waiting for discussion | Unknown | Lighting | -- | See [gui-features.md](reference/f99/gui-features.md#light-effects). |
 | Retro_snake | Waiting for discussion | Unknown | Lighting | -- | |
 | Neon_stream | Waiting for discussion | Unknown | Lighting | -- | |
 | Reaction | Waiting for discussion | Unknown | Lighting | -- | |
@@ -74,16 +74,16 @@ See [gui-features.md](reference/f99/gui-features.md#light-effects).
 | Rotating windmill | Waiting for discussion | Unknown | Lighting | -- | |
 | Colorful waterfall | Waiting for discussion | Unknown | Lighting | -- | |
 | Blossoming | Waiting for discussion | Unknown | Lighting | -- | |
-| Self-define (per-key colour) | Waiting for discussion | Unknown | Lighting | -- | Hardware confirms per-key RGB exists. Editing controls not captured. |
+| Self-define (per-key colour) | Waiting for discussion | Unknown | Lighting | -- | See [hardware.md](reference/f99/hardware.md#lighting-hardware). |
 | OFF | Waiting for discussion | Unknown | Lighting | -- | |
 | Colour wheel / picker | Waiting for discussion | -- | Lighting | -- | Input method. Terminal equivalent not decided. |
 | Hex colour entry | Waiting for discussion | -- | Lighting | -- | Input method. |
 | RGB numeric entry | Planned (slice 5) | -- | Lighting | `aula-f99 color R G B` (CLI exists) | TUI form for the same input not built yet. |
 | Preset colour swatches | Waiting for discussion | -- | Lighting | -- | 8 fixed colours in the OEM software. |
 | Custom colour slots | Waiting for discussion | Unknown | Lighting | -- | 10 saved slots in the OEM software. |
-| "Colourful" multi-colour toggle | Flagged -- uncertain | Unknown | Lighting | -- | Unclear whether it overrides the picked colour. |
-| Brightness control | Waiting for discussion | Unknown | Lighting | -- | Max value not confirmed. |
-| Speed control | Waiting for discussion | Unknown | Lighting | -- | Max value not confirmed. Shown only for some effects. |
+| "Colourful" multi-colour toggle | Flagged -- uncertain | Unknown | Lighting | -- | See [gui-features.md](reference/f99/gui-features.md#open-questions). |
+| Brightness control | Waiting for discussion | Unknown | Lighting | -- | See [gui-features.md](reference/f99/gui-features.md#color-controls). |
+| Speed control | Waiting for discussion | Unknown | Lighting | -- | See [gui-features.md](reference/f99/gui-features.md#color-controls). |
 
 ## Music (sound-reactive lighting)
 
@@ -103,7 +103,7 @@ its own.
 | Blooming (passion) | Waiting for discussion | Unknown | Music | -- | |
 | Pearl falling jade plate (rock) | Waiting for discussion | Unknown | Music | -- | |
 | Clouds follow the moon (passion) | Waiting for discussion | Unknown | Music | -- | |
-| Mountains and Flowing Waters (regular) | Waiting for discussion | Unknown | Music | -- | Name unconfirmed, truncated in the source screenshot. |
+| Mountains and Flowing Waters (regular) | Waiting for discussion | Unknown | Music | -- | See [gui-features.md](reference/f99/gui-features.md#music-reactive-effects). |
 | Raining like silk (regular) | Waiting for discussion | Unknown | Music | -- | |
 | Gain factor control | Waiting for discussion | Unknown | Music | -- | |
 | Smoothness control | Waiting for discussion | Unknown | Music | -- | |
@@ -123,7 +123,7 @@ The OEM "Key assignment" screen. See
 | Layer: Default | Waiting for discussion | Unknown | Keys | -- | |
 | Layer: FN1 | Waiting for discussion | Unknown | Keys | -- | |
 | Layer: FN2 | Waiting for discussion | Unknown | Keys | -- | |
-| Layer: Tap | Flagged -- uncertain | Unknown | Keys | -- | What this layer does is not known. Open question. |
+| Layer: Tap | Flagged -- uncertain | Unknown | Keys | -- | See [gui-features.md](reference/f99/gui-features.md#open-questions). |
 | Remap to a standard keycode (Keyboard tab) | Waiting for discussion | Unknown | Keys | -- | |
 | Remap to a mouse action (Mouse tab) | Waiting for discussion | Unknown | Keys | -- | 5 actions. |
 | Remap to a media/system key (Multimedia tab) | Waiting for discussion | Unknown | Keys | -- | 14 actions. Overlaps the Consumer Control keys this project already reads. |
@@ -187,7 +187,7 @@ in software, separately from the physical key combination. See
 | Feature | Status | Writes to device? | TUI location | CLI | Notes |
 | --- | --- | --- | --- | --- | --- |
 | OS mode switch (Android/Windows/Mac/iOS) | Flagged -- uncertain | Unknown | Status | -- | `FN+Q/W/E/R` on the keyboard. |
-| Bluetooth slot switch (1/2/3) | Flagged -- uncertain | Unknown | Status | -- | `FN+1/2/3` on the keyboard. BT mode is likely unreachable by USB. |
+| Bluetooth slot switch (1/2/3) | Flagged -- uncertain | Unknown | Status | -- | `FN+1/2/3` on the keyboard. See [protocol.md](reference/f99/protocol.md#device-identifiers). |
 | 2.4G pairing | Flagged -- uncertain | Unknown | Status | -- | `FN+\`` (hold 3s) on the keyboard. |
 | Restore factory defaults | Flagged -- uncertain | Unknown | Settings | -- | `FN+Esc` (hold 3s) on the keyboard. Destructive; would need extra confirmation if ever built. |
 | Windows-key lock | Flagged -- uncertain | Unknown | Settings | -- | `FN+` left `Win` on the keyboard. Windows mode only. |
