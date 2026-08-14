@@ -1,6 +1,10 @@
+import threading
 from pathlib import Path
 
+import pytest
+
 from aula_f99 import keybindings
+from aula_f99.errors import ConfigLoadError
 
 
 def test_load_keybindings_reads_the_real_config_file():
@@ -28,6 +32,21 @@ def test_detectable_reference_rows_have_a_backing_code():
 
 def test_load_keybindings_missing_file_returns_empty(tmp_path: Path):
     assert keybindings.load_keybindings(tmp_path / "does_not_exist.toml") == []
+
+
+def test_load_keybindings_invalid_toml_raises_config_load_error(tmp_path: Path):
+    path = tmp_path / "f99_keybindings.toml"
+    path.write_text("this is not valid toml [[[")
+    with pytest.raises(ConfigLoadError) as excinfo:
+        keybindings.load_keybindings(path)
+    assert excinfo.value.path == path
+
+
+def test_load_keybindings_missing_key_raises_config_load_error(tmp_path: Path):
+    path = tmp_path / "f99_keybindings.toml"
+    path.write_text('[[shortcut]]\nshortcut = "FN + Q"\n')  # missing required "category"/"effect"
+    with pytest.raises(ConfigLoadError):
+        keybindings.load_keybindings(path)
 
 
 def test_save_and_load_roundtrip(tmp_path: Path):
@@ -90,6 +109,48 @@ def test_record_unknown_code_appends_stub(tmp_path: Path):
     reloaded = keybindings.load_keybindings(path)
     assert len(reloaded) == 1
     assert reloaded[0].code == 0x1234
+
+
+def test_record_unknown_code_survives_concurrent_listener_threads(tmp_path: Path):
+    # The key monitor runs one listener thread per link (wired, wireless).
+    # An unrecognised code on either one calls record_unknown_code(), a
+    # read-modify-write of the same file -- without the lock, two threads
+    # racing this drop each other's update (last write wins on a stale read).
+    path = tmp_path / "f99_keybindings.toml"
+    keybindings.save_keybindings([], path=path)
+
+    def hammer(base: int) -> None:
+        for i in range(60):
+            keybindings.record_unknown_code(base + i, path=path)
+
+    threads = [
+        threading.Thread(target=hammer, args=(0x1000,)),
+        threading.Thread(target=hammer, args=(0x2000,)),
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    codes = {e.code for e in keybindings.load_keybindings(path)}
+    assert len(codes) == 120
+
+
+def test_save_keybindings_is_atomic_on_write_failure(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    path = tmp_path / "f99_keybindings.toml"
+    original = [keybindings.Shortcut(category="Connection", shortcut="FN + `", effect="x", detectable=False)]
+    keybindings.save_keybindings(original, path=path)
+    before = path.read_bytes()
+
+    def boom(*args: object, **kwargs: object) -> None:
+        raise RuntimeError("simulated crash mid-write")
+
+    monkeypatch.setattr("aula_f99.config.tomli_w.dump", boom)
+    with pytest.raises(RuntimeError):
+        keybindings.save_keybindings([], path=path)
+
+    assert path.read_bytes() == before  # untouched, not truncated
+    assert list(path.parent.glob(".*.tmp")) == []  # no stray temp file left behind
 
 
 def test_record_unknown_code_does_not_duplicate(tmp_path: Path):

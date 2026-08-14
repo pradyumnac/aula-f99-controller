@@ -10,9 +10,8 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-import tomli_w
-
-from aula_f99.config import settings_path
+from aula_f99.config import atomic_write_toml, settings_path
+from aula_f99.errors import ConfigLoadError
 
 LINK_MODES = ("wireless", "wired")
 
@@ -28,28 +27,29 @@ def load_settings(path: Path | None = None) -> AppSettings:
     path = path or settings_path()
     if not path.exists():
         return AppSettings()
-    with path.open("rb") as f:
-        raw = tomllib.load(f)
-    defaults = AppSettings()
-    default_link = str(raw.get("default_link", defaults.default_link))
-    if default_link not in LINK_MODES:
-        default_link = defaults.default_link
-    return AppSettings(
-        theme=str(raw.get("theme", defaults.theme)),
-        default_link=default_link,
-        confirm_writes=bool(raw.get("confirm_writes", defaults.confirm_writes)),
-    )
+    try:
+        with path.open("rb") as f:
+            raw = tomllib.load(f)
+        defaults = AppSettings()
+        default_link = str(raw.get("default_link", defaults.default_link))
+        if default_link not in LINK_MODES:
+            default_link = defaults.default_link
+        return AppSettings(
+            theme=str(raw.get("theme", defaults.theme)),
+            default_link=default_link,
+            confirm_writes=bool(raw.get("confirm_writes", defaults.confirm_writes)),
+        )
+    except Exception as exc:
+        raise ConfigLoadError(path, exc) from exc
 
 
 def save_settings(settings: AppSettings, path: Path | None = None) -> None:
     path = path or settings_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("wb") as f:
-        tomli_w.dump(
-            {
-                "theme": settings.theme,
-                "default_link": settings.default_link,
-                "confirm_writes": settings.confirm_writes,
-            },
-            f,
-        )
+    atomic_write_toml(
+        path,
+        {
+            "theme": settings.theme,
+            "default_link": settings.default_link,
+            "confirm_writes": settings.confirm_writes,
+        },
+    )

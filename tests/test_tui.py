@@ -3,7 +3,8 @@ from collections.abc import Awaitable, Callable
 
 from textual.widgets import ContentSwitcher, DataTable, ListView
 
-from aula_f99.tui.actions import ACTIONS, ACTIONS_BY_ID, load_keymap
+from aula_f99.config import settings_path, tui_keymap_path
+from aula_f99.tui.actions import ACTIONS, ACTIONS_BY_ID, load_keymap, save_keymap
 from aula_f99.tui.app import AulaF99App
 from aula_f99.tui.app_keybindings import AppKeybindingsScreen
 from aula_f99.tui.config_paths import ConfigPathsScreen
@@ -11,7 +12,7 @@ from aula_f99.tui.key_monitor import KeyMonitorScreen
 from aula_f99.tui.main_screen import MainScreen, SectionList
 from aula_f99.tui.panels import NotImplementedPanel
 from aula_f99.tui.rebind import RebindScreen
-from aula_f99.tui.settings_store import load_settings
+from aula_f99.tui.settings_store import AppSettings, load_settings
 
 
 def run_async(coro: Callable[[], Awaitable[None]], timeout: float = 5) -> None:
@@ -263,6 +264,65 @@ async def _settings_opens_config_paths() -> None:
 
 def test_settings_opens_config_paths():
     run_async(_settings_opens_config_paths)
+
+
+async def _corrupt_settings_file_still_launches_with_defaults() -> None:
+    settings_path().parent.mkdir(parents=True, exist_ok=True)
+    settings_path().write_text("not valid toml [[[")
+
+    app = AulaF99App()
+    async with app.run_test(notifications=True) as pilot:
+        await pilot.pause()
+        # Launched anyway, on the default theme, and said why.
+        assert isinstance(app.screen, MainScreen)
+        assert app.theme == AppSettings().theme
+        messages = [n.message for n in app._notifications]
+        assert any("settings.toml" in m for m in messages), messages
+
+
+def test_corrupt_settings_file_still_launches_with_defaults():
+    run_async(_corrupt_settings_file_still_launches_with_defaults)
+
+
+async def _corrupt_keymap_file_still_launches_with_default_bindings() -> None:
+    tui_keymap_path().parent.mkdir(parents=True, exist_ok=True)
+    tui_keymap_path().write_text("not valid toml [[[")
+
+    app = AulaF99App()
+    async with app.run_test(notifications=True) as pilot:
+        await pilot.pause()
+        messages = [n.message for n in app._notifications]
+        assert any("tui_keymap.toml" in m for m in messages), messages
+        # Default bindings still work despite the unreadable override file.
+        await pilot.press("m")
+        await pilot.pause()
+        assert isinstance(app.screen, KeyMonitorScreen)
+
+
+def test_corrupt_keymap_file_still_launches_with_default_bindings():
+    run_async(_corrupt_keymap_file_still_launches_with_default_bindings)
+
+
+async def _hand_edited_keymap_lockout_is_sanitized_and_reported() -> None:
+    # A hand-edited file that would strand quit on a dead key, and steal the
+    # key monitor's key for something else, must not survive into the live
+    # keymap -- both overrides get dropped, and the app says why.
+    save_keymap({"f99.app.quit": "notarealkey", "f99.app.key_monitor": "s"})
+
+    app = AulaF99App()
+    async with app.run_test(notifications=True) as pilot:
+        await pilot.pause()
+        messages = [n.message for n in app._notifications]
+        assert any("notarealkey" in m for m in messages), messages
+        assert any("Status" in m for m in messages), messages
+
+        await pilot.press("q")
+        await pilot.pause()
+        assert not app.is_running
+
+
+def test_hand_edited_keymap_lockout_is_sanitized_and_reported():
+    run_async(_hand_edited_keymap_lockout_is_sanitized_and_reported)
 
 
 async def _theme_choice_persists_across_launches() -> None:

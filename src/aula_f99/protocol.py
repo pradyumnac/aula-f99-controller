@@ -34,7 +34,14 @@ def crc(packet: bytearray) -> int:
     return sum(packet[: PACKET_LEN - 1]) & 0xFF
 
 
+def validate_rgb(r: int, g: int, b: int) -> None:
+    for name, value in (("r", r), ("g", g), ("b", b)):
+        if not 0 <= value <= 255:
+            raise ValueError(f"{name}={value} is out of range -- each colour channel must be 0-255")
+
+
 def build_solid_color_packet(r: int, g: int, b: int) -> bytearray:
+    validate_rgb(r, g, b)
     packet = bytearray(PACKET_LEN)
     packet[0] = 0x13
     packet[1] = CMD_LED_CONTROL

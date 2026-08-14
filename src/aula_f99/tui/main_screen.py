@@ -174,7 +174,14 @@ class MainScreen(Screen[None]):
 
     @work(thread=True, exclusive=True)
     def _probe_link(self) -> None:
-        link = probe_active_link()
+        try:
+            link = probe_active_link()
+        except Exception as exc:
+            self.app.call_from_thread(self._set_link, "active link: probe failed")
+            self.app.call_from_thread(
+                self.notify, f"Link probe failed: {exc}", title="Refresh", severity="error"
+            )
+            return
         self.app.call_from_thread(self._set_link, f"active link: {link}")
 
     def _set_link(self, text: str) -> None:
@@ -188,4 +195,8 @@ class MainScreen(Screen[None]):
         self.query_one(ContentPane).border_title = section.title
 
     def _refresh_header(self) -> None:
-        self.app.sub_title = detect_connection().guessed_mode
+        try:
+            self.app.sub_title = detect_connection().guessed_mode
+        except OSError as exc:
+            self.app.sub_title = "connection check failed"
+            self.notify(f"Could not enumerate HID devices: {exc}", title="Status", severity="error")

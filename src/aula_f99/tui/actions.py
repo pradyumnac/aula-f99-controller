@@ -11,9 +11,26 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-import tomli_w
+from textual.keys import Keys, key_to_character
 
-from aula_f99.config import tui_keymap_path
+from aula_f99.config import atomic_write_toml, tui_keymap_path
+from aula_f99.errors import ConfigLoadError
+
+_MODIFIERS = frozenset({"ctrl", "shift", "alt", "meta"})
+_KNOWN_KEY_NAMES = frozenset(k.value for k in Keys)
+
+
+def _is_known_key(key: str) -> bool:
+    """Whether Textual would recognise `key` as a key identifier at all.
+
+    A live rebind can never produce anything else -- it captures a real key
+    press, so whatever comes out is valid by construction. A hand-edited
+    keymap file has no such guarantee.
+    """
+    *modifiers, base = key.split("+")
+    if not all(m in _MODIFIERS for m in modifiers):
+        return False
+    return base in _KNOWN_KEY_NAMES or key_to_character(base) is not None
 
 
 @dataclass(frozen=True)
@@ -73,22 +90,59 @@ ACTIONS_BY_ID = {action.id: action for action in ACTIONS}
 UNBINDABLE_KEYS = frozenset({"escape", "tab", "shift+tab", "enter"})
 
 
-def load_keymap(path: Path | None = None) -> dict[str, str]:
-    """Saved overrides, as binding id -> key. Unknown ids are dropped."""
+def load_keymap(path: Path | None = None, warnings: list[str] | None = None) -> dict[str, str]:
+    """Saved overrides, as binding id -> key. Unknown ids are dropped.
+
+    An override that breaks a rebind rule -- a reserved key, or a key
+    another action already holds -- is dropped too. The rebind screen
+    enforces those rules on a live rebind, but a hand-edited file skips the
+    screen entirely, so this is the only place left to catch it. Silently
+    keeping a broken override is worse than the rules being pointless: it
+    can strand the user on a key that no longer does what they expect (see
+    docs/tui-spec.md#error-handling). Pass `warnings` to learn what was
+    dropped and why.
+    """
     path = path or tui_keymap_path()
     if not path.exists():
         return {}
-    with path.open("rb") as f:
-        raw = tomllib.load(f)
-    entries = raw.get("keymap", {})
-    return {str(k): str(v) for k, v in entries.items() if str(k) in ACTIONS_BY_ID}
+    try:
+        with path.open("rb") as f:
+            raw = tomllib.load(f)
+        entries = raw.get("keymap", {})
+        candidate = {str(k): str(v) for k, v in entries.items() if str(k) in ACTIONS_BY_ID}
+    except Exception as exc:
+        raise ConfigLoadError(path, exc) from exc
+
+    cleaned, problems = _sanitize_keymap(candidate)
+    if warnings is not None:
+        warnings.extend(problems)
+    return cleaned
+
+
+def _sanitize_keymap(candidate: dict[str, str]) -> tuple[dict[str, str], list[str]]:
+    cleaned: dict[str, str] = {}
+    warnings: list[str] = []
+    for action_id, key in candidate.items():
+        action = ACTIONS_BY_ID[action_id]
+        if key in UNBINDABLE_KEYS:
+            warnings.append(f"{action.description}: {key!r} is reserved, ignoring this override")
+            continue
+        if not _is_known_key(key):
+            warnings.append(f"{action.description}: {key!r} is not a recognised key, ignoring this override")
+            continue
+        clash = conflicting_action(key, cleaned, exclude_id=action_id)
+        if clash is not None:
+            warnings.append(
+                f"{action.description}: {key!r} already used by {clash.description}, ignoring this override"
+            )
+            continue
+        cleaned[action_id] = key
+    return cleaned, warnings
 
 
 def save_keymap(keymap: dict[str, str], path: Path | None = None) -> None:
     path = path or tui_keymap_path()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("wb") as f:
-        tomli_w.dump({"keymap": keymap}, f)
+    atomic_write_toml(path, {"keymap": keymap})
 
 
 def current_key(action: Action, keymap: dict[str, str]) -> str:

@@ -9,10 +9,11 @@ from textual.app import ComposeResult
 from textual.widgets import DataTable, Label, ListItem, ListView, Static
 
 from aula_f99.detect import detect_connection
+from aula_f99.errors import ConfigLoadError
 from aula_f99.keybindings import load_keybindings
 from aula_f99.tui.app_keybindings import AppKeybindingsScreen
 from aula_f99.tui.config_paths import ConfigPathsScreen
-from aula_f99.tui.settings_store import LINK_MODES, load_settings, save_settings
+from aula_f99.tui.settings_store import LINK_MODES, AppSettings, load_settings, save_settings
 
 
 @runtime_checkable
@@ -32,7 +33,11 @@ class StatusPanel(Static):
         self.refresh_content()
 
     def refresh_content(self) -> None:
-        status = detect_connection()
+        try:
+            status = detect_connection()
+        except OSError as exc:
+            self.update(f"[b]Connection check failed:[/b] {exc}\n\nPress 'r' to try again.")
+            return
         lines = [
             f"[b]Enumeration guess:[/b] {status.guessed_mode}",
             "",
@@ -77,7 +82,12 @@ class KeyboardKeybindingsPanel(Static):
     def on_mount(self) -> None:
         table = self.query_one("#kbd-keys", DataTable)
         table.add_columns("Shortcut", "Effect", "Category")
-        for shortcut in load_keybindings():
+        try:
+            shortcuts = load_keybindings()
+        except ConfigLoadError as exc:
+            self.notify(str(exc), title="Keybindings file ignored", severity="warning", timeout=8)
+            return
+        for shortcut in shortcuts:
             if shortcut.shortcut:
                 table.add_row(shortcut.shortcut, shortcut.effect, shortcut.category)
 
@@ -97,7 +107,12 @@ class SettingsPanel(Static):
 
     def __init__(self) -> None:
         super().__init__()
-        self._settings = load_settings()
+        try:
+            self._settings = load_settings()
+        except ConfigLoadError:
+            # The app already warned about this file during startup, and
+            # fell back to the same defaults -- don't tell the user twice.
+            self._settings = AppSettings()
 
     def compose(self) -> ComposeResult:
         yield Static("Enter opens or toggles the selected setting.", id="settings-hint")
@@ -151,13 +166,21 @@ class SettingsPanel(Static):
 
     def _toggle_default_link(self) -> None:
         other = LINK_MODES[1 - LINK_MODES.index(self._settings.default_link)]
-        self._settings = replace(self._settings, default_link=other)
-        save_settings(self._settings)
-        self._reload()
-        self.notify(f"Default link is now {other}.")
+        self._save(replace(self._settings, default_link=other), f"Default link is now {other}.")
 
     def _toggle_confirm_writes(self) -> None:
-        self._settings = replace(self._settings, confirm_writes=not self._settings.confirm_writes)
-        save_settings(self._settings)
+        new_value = not self._settings.confirm_writes
+        self._save(
+            replace(self._settings, confirm_writes=new_value),
+            f"Confirm before write is now {'on' if new_value else 'off'}.",
+        )
+
+    def _save(self, settings: AppSettings, success_message: str) -> None:
+        try:
+            save_settings(settings)
+        except OSError as exc:
+            self.notify(f"Could not save settings: {exc}", title="Settings not saved", severity="error")
+            return
+        self._settings = settings
         self._reload()
-        self.notify(f"Confirm before write is now {'on' if self._settings.confirm_writes else 'off'}.")
+        self.notify(success_message)

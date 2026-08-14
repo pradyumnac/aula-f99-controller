@@ -12,6 +12,7 @@ from textual.keys import format_key
 from textual.screen import Screen
 from textual.widgets import DataTable, Footer, Header, Static
 
+from aula_f99.errors import ConfigLoadError
 from aula_f99.tui.actions import (
     ACTIONS,
     ACTIONS_BY_ID,
@@ -62,7 +63,11 @@ class AppKeybindingsScreen(Screen[None]):
         self.app.pop_screen()
 
     def reload(self) -> None:
-        self._keymap = load_keymap()
+        try:
+            self._keymap = load_keymap()
+        except ConfigLoadError as exc:
+            self._keymap = {}
+            self.notify(str(exc), title="Keybindings file ignored", severity="warning", timeout=8)
         table = self.query_one("#app-keys", DataTable)
         cursor = table.cursor_row
         table.clear()
@@ -99,7 +104,11 @@ class AppKeybindingsScreen(Screen[None]):
             keymap.pop(action.id, None)  # back to default -- don't persist a no-op
         else:
             keymap[action.id] = key
-        save_keymap(keymap)
+        try:
+            save_keymap(keymap)
+        except OSError as exc:
+            self.notify(f"Could not save keybindings: {exc}", title="Rebind not saved", severity="error")
+            return
         self.app.update_keymap(keymap)
         self.reload()
         self.notify(f"{action.description} is now {format_key(key)}.")

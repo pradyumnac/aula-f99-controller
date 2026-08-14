@@ -48,7 +48,13 @@ class KeyMonitorScreen(ModalScreen[None]):
         def on_event(link: str, raw: bytes) -> None:
             if stop_event.is_set():
                 return
-            text = format_event(raw)
+            try:
+                text = format_event(raw)
+            except Exception as exc:
+                # format_event reads (and can rewrite) the keybindings file
+                # on every press -- a bad file must not kill the listener
+                # thread, since that would silently stop all future reports.
+                text = f"could not read this key press: {exc}"
             if text is None:
                 return  # release/no-op report -- don't double-notify
             # A report can land while the app is tearing down; the loop

@@ -22,6 +22,29 @@ every screen.
 | Works at 80x24 | The layout stays usable at the minimum terminal size. Larger terminals get more room, not more panels. |
 | Never block | Device reads and writes run in a worker. The interface stays responsive. |
 | Friction before writes | Any action that writes to the keyboard needs a confirmation first. |
+| Say why | A failure never shows a traceback or a silent no-op. It names what failed and why. See [Error handling](#error-handling). |
+
+## Error handling
+
+Two kinds of thing can fail: a config file the user hand-edited, and the
+keyboard itself. Each has one fixed rule.
+
+| Failure | Rule |
+| --- | --- |
+| A config file will not parse | Fall back to that file's defaults, keep running, and warn once, naming the file and the parse error. A bad edit must never lock the user out of the program that fixes it. |
+| A config file parses but breaks a rule | Drop only the offending entry and warn, naming it and why -- a hand-edited `tui_keymap.toml` skips the checks the rebind screen enforces live (reserved key, unrecognised key, a key another action already holds), so loading is the only place left to enforce them. Valid entries in the same file are kept. |
+| A config file will not save | Keep the old value, and say so. The setting does not silently appear to have changed. |
+| A config write is interrupted | The previous file survives intact. Every save writes to a temp file in the same directory first, then renames it over the target -- never truncate-then-write. |
+| Two threads write the same file at once | Serialized behind a lock. The key monitor runs one listener thread per link, and both can log an unrecognised code to the same file at once; without a lock, the second write silently overwrites the first's change. |
+| The keyboard is absent or unreadable | Say which device was looked for and why the attempt failed. On the CLI: one line to stderr, exit 1. In the TUI: the panel or header states it, and the app stays up. |
+| A background worker raises | Report it and leave the interface usable. A dead worker never fails silently. |
+
+Every config load collapses its failure modes into one exception,
+`ConfigLoadError`, carrying the path and the cause. Callers catch that one
+type, choose the fallback, and show the user the reason.
+
+A genuine bug is not caught. Only the failures above are turned into
+messages; anything else still raises, so it gets found rather than hidden.
 
 ## Layout
 

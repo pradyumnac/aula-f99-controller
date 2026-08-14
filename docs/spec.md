@@ -23,7 +23,8 @@ below says where implemented code lives, not what is implemented.
 | [`usage_codes.py`](../src/aula_f99/usage_codes.py) | Parses a raw Consumer Control report: release detection, usage-code extraction, display formatting |
 | [`keybindings.py`](../src/aula_f99/keybindings.py) | Every known FN shortcut, and the Consumer Control usage-code lookup table, backed by TOML |
 | [`cli.py`](../src/aula_f99/cli.py) | Command-line entry point |
-| [`config.py`](../src/aula_f99/config.py) | Where this project's files live, under the XDG layout |
+| [`config.py`](../src/aula_f99/config.py) | Where this project's files live, under the XDG layout; `atomic_write_toml()` for crash-safe saves |
+| [`errors.py`](../src/aula_f99/errors.py) | `ConfigLoadError`: one exception type for every unreadable config file |
 | [`tui/app.py`](../src/aula_f99/tui/app.py) | The `App` subclass: title, theme, quit binding, entry point |
 | [`tui/actions.py`](../src/aula_f99/tui/actions.py) | Every section and rebindable action, and the saved keymap |
 | [`tui/main_screen.py`](../src/aula_f99/tui/main_screen.py) | The shell: sidebar, content switcher, key bindings, layout CSS |

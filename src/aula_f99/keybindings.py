@@ -4,13 +4,22 @@ Backed by config/f99_keybindings.toml.
 
 from __future__ import annotations
 
+import threading
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
-import tomli_w
+from aula_f99.config import atomic_write_toml
+from aula_f99.errors import ConfigLoadError
 
 CONFIG_PATH = Path(__file__).resolve().parents[2] / "config" / "f99_keybindings.toml"
+
+# The key monitor runs one listener thread per link (wired, wireless), and
+# an unrecognised code on either one triggers record_unknown_code()'s
+# read-modify-write of this file. Without a lock, two presses landing at
+# once silently drop one of the two updates (last write wins on a stale
+# read). One lock is enough -- there is only ever one file in practice.
+_write_lock = threading.Lock()
 
 
 @dataclass(frozen=True)
@@ -52,16 +61,19 @@ def _to_raw(entry: Shortcut) -> dict[str, str | bool]:
 def load_keybindings(path: Path = CONFIG_PATH) -> list[Shortcut]:
     if not path.exists():
         return []
-    with path.open("rb") as f:
-        raw = tomllib.load(f)
-    return [_from_raw(entry) for entry in raw.get("shortcut", [])]
+    try:
+        with path.open("rb") as f:
+            raw = tomllib.load(f)
+        return [_from_raw(entry) for entry in raw.get("shortcut", [])]
+    except Exception as exc:
+        # Anything from a bad TOML parse to a missing/mistyped key -- this
+        # file is hand-editable, so any of it is plausible. The caller
+        # decides the fallback and tells the user; we just name the cause.
+        raise ConfigLoadError(path, exc) from exc
 
 
 def save_keybindings(entries: list[Shortcut], path: Path = CONFIG_PATH) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    raw = {"shortcut": [_to_raw(e) for e in entries]}
-    with path.open("wb") as f:
-        tomli_w.dump(raw, f)
+    atomic_write_toml(path, {"shortcut": [_to_raw(e) for e in entries]})
 
 
 def lookup_by_code(code: int, path: Path = CONFIG_PATH) -> Shortcut | None:
@@ -72,20 +84,25 @@ def lookup_by_code(code: int, path: Path = CONFIG_PATH) -> Shortcut | None:
 
 
 def record_unknown_code(code: int, path: Path = CONFIG_PATH) -> Shortcut:
-    """Looks up code; appends an "Unknown" stub if unseen."""
-    entries = load_keybindings(path)
-    for entry in entries:
-        if entry.code == code:
-            return entry
+    """Looks up code; appends an "Unknown" stub if unseen.
 
-    stub = Shortcut(
-        category="Consumer Control code",
-        shortcut="",
-        effect="Unknown",
-        detectable=True,
-        code=code,
-        short=f"0x{code:04X}",
-    )
-    entries.append(stub)
-    save_keybindings(entries, path)
-    return stub
+    Read-modify-write, so it needs the lock: two listener threads (wired,
+    wireless) can both call this for a different unseen code at once.
+    """
+    with _write_lock:
+        entries = load_keybindings(path)
+        for entry in entries:
+            if entry.code == code:
+                return entry
+
+        stub = Shortcut(
+            category="Consumer Control code",
+            shortcut="",
+            effect="Unknown",
+            detectable=True,
+            code=code,
+            short=f"0x{code:04X}",
+        )
+        entries.append(stub)
+        save_keybindings(entries, path)
+        return stub
