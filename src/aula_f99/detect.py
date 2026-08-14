@@ -145,6 +145,7 @@ def stream_consumer_events(
     stop_event: threading.Event,
     on_event: Callable[[str, bytes], None],
     poll_timeout_s: float = 0.2,
+    on_ready: Callable[[list[str]], None] | None = None,
 ) -> None:
     """Continuously listen on both wired/wireless consumer-control
     collections, calling on_event(link, raw_bytes) for every report received,
@@ -152,6 +153,12 @@ def stream_consumer_events(
 
     Read-only: same Consumer Control collection as probe_active_link(), just
     read in a loop instead of once.
+
+    `on_ready`, if given, is called once with the links actually being
+    listened on (e.g. `["wired"]`, or `[]` if neither is present) before
+    the blocking wait -- the only way a caller can tell "found nothing to
+    listen on" apart from "listening, but idle so far", since both look
+    identical from the outside otherwise.
     """
     wired_path = _find_consumer_path(protocol.VID_WIRED, protocol.PID_WIRED)
     wireless_path = _find_consumer_path(protocol.VID_WIRELESS, protocol.PID_WIRELESS)
@@ -176,10 +183,16 @@ def stream_consumer_events(
                 dev.close()
 
     threads = []
+    links: list[str] = []
     if wired_path:
         threads.append(threading.Thread(target=_loop, args=(wired_path, "wired"), daemon=True))
+        links.append("wired")
     if wireless_path:
         threads.append(threading.Thread(target=_loop, args=(wireless_path, "wireless"), daemon=True))
+        links.append("wireless")
+
+    if on_ready is not None:
+        on_ready(links)
 
     for t in threads:
         t.start()

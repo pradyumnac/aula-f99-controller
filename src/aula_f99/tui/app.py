@@ -17,9 +17,13 @@ class AulaF99App(App[None]):
     TITLE = "aula-f99-controller"
     BINDINGS = [Binding("q", "quit", "Quit", id="f99.app.quit")]
 
-    def on_mount(self) -> None:
-        self._settings: AppSettings | None = None
+    # A class attribute, not set in on_mount -- `theme` is a reactive, and
+    # Textual sets it (to its own default) during __init__, before on_mount
+    # ever runs. watch_theme fires right then, and needs this to already
+    # exist rather than raising AttributeError.
+    _settings: AppSettings | None = None
 
+    def on_mount(self) -> None:
         settings, settings_error = self._load_settings_safely()
         if settings.theme not in self.available_themes:
             settings = replace(settings, theme=AppSettings().theme)
@@ -57,11 +61,18 @@ class AulaF99App(App[None]):
 
     def watch_theme(self, theme: str) -> None:
         # Fires once on the initial `on_mount` assignment too -- harmless, it
-        # just re-saves the value that was just loaded from disk.
+        # just re-saves the value that was just loaded from disk. Also fires
+        # once during __init__ (Textual's own default), before _settings is
+        # set at all -- the None check below covers that case too.
         if self._settings is None or theme == self._settings.theme:
             return
-        self._settings = replace(self._settings, theme=theme)
-        save_settings(self._settings)
+        settings = replace(self._settings, theme=theme)
+        try:
+            save_settings(settings)
+        except OSError as exc:
+            self.notify(f"Could not save theme choice: {exc}", title="Settings not saved", severity="error")
+            return
+        self._settings = settings
 
 
 def main() -> None:

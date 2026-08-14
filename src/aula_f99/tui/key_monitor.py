@@ -27,11 +27,7 @@ class KeyMonitorScreen(ModalScreen[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         with Vertical():
-            yield Static(
-                "Listening for media/volume key presses (no time limit).\n"
-                "Each press pops a notification. Press Escape to return to the main screen.",
-                id="listener-status",
-            )
+            yield Static("Looking for a device to listen on...", id="listener-status")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -43,8 +39,26 @@ class KeyMonitorScreen(ModalScreen[None]):
     def action_back(self) -> None:
         self.app.pop_screen()
 
+    def _set_status(self, links: list[str]) -> None:
+        # Without this, "found nothing to listen on" and "listening, but
+        # idle so far" look identical: both just sit there saying nothing.
+        if not links:
+            self.query_one("#listener-status", Static).update(
+                "No wired or wireless link found to listen on.\n"
+                "Connect the keyboard, then reopen this screen. Press Escape to go back."
+            )
+            return
+        self.query_one("#listener-status", Static).update(
+            f"Listening on: {', '.join(links)} (no time limit).\n"
+            "Each press pops a notification. Press Escape to return to the main screen."
+        )
+
     @work(thread=True)
     def _run_stream(self, stop_event: threading.Event) -> None:
+        def on_ready(links: list[str]) -> None:
+            with contextlib.suppress(RuntimeError):
+                self.app.call_from_thread(self._set_status, links)
+
         def on_event(link: str, raw: bytes) -> None:
             if stop_event.is_set():
                 return
@@ -67,4 +81,4 @@ class KeyMonitorScreen(ModalScreen[None]):
                     timeout=1,
                 )
 
-        stream_consumer_events(stop_event, on_event)
+        stream_consumer_events(stop_event, on_event, on_ready=on_ready)

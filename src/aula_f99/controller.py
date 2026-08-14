@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+
 import hid
 
 from aula_f99 import protocol
@@ -51,7 +53,12 @@ class AulaF99:
         return response[10]
 
     def close(self) -> None:
-        self._dev.close()
+        # A close failure is never actionable -- the device is going away
+        # either way -- and letting it raise here would mask a command that
+        # already completed (its result already printed/returned) behind a
+        # misleading "Error: ..." from teardown, not the command itself.
+        with contextlib.suppress(OSError):
+            self._dev.close()
 
     def __enter__(self) -> AulaF99:
         return self
