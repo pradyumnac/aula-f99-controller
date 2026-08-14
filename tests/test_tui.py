@@ -6,10 +6,12 @@ from textual.widgets import ContentSwitcher, DataTable, ListView
 from aula_f99.tui.actions import ACTIONS, ACTIONS_BY_ID, load_keymap
 from aula_f99.tui.app import AulaF99App
 from aula_f99.tui.app_keybindings import AppKeybindingsScreen
+from aula_f99.tui.config_paths import ConfigPathsScreen
 from aula_f99.tui.key_monitor import KeyMonitorScreen
 from aula_f99.tui.main_screen import MainScreen, SectionList
 from aula_f99.tui.panels import NotImplementedPanel
 from aula_f99.tui.rebind import RebindScreen
+from aula_f99.tui.settings_store import load_settings
 
 
 def run_async(coro: Callable[[], Awaitable[None]], timeout: float = 5) -> None:
@@ -216,3 +218,66 @@ async def _rebinding_back_to_default_clears_the_override() -> None:
 
 def test_rebinding_back_to_default_clears_the_override():
     run_async(_rebinding_back_to_default_clears_the_override)
+
+
+async def _settings_toggles_default_link_and_confirm_writes() -> None:
+    app = AulaF99App()
+    async with app.run_test() as pilot:
+        await pilot.press("g")  # Settings section
+        await pilot.pause()
+        settings_list = app.screen.query_one("#settings-list", ListView)
+        settings_list.focus()
+        await pilot.pause()
+
+        settings_list.index = 2  # default-link
+        await pilot.press("enter")
+        await pilot.pause()
+        assert load_settings().default_link == "wired"
+
+        settings_list.index = 3  # confirm-writes
+        await pilot.press("enter")
+        await pilot.pause()
+        assert load_settings().confirm_writes is False
+
+
+def test_settings_toggles_default_link_and_confirm_writes():
+    run_async(_settings_toggles_default_link_and_confirm_writes)
+
+
+async def _settings_opens_config_paths() -> None:
+    app = AulaF99App()
+    async with app.run_test() as pilot:
+        await pilot.press("g")  # Settings section
+        await pilot.pause()
+        settings_list = app.screen.query_one("#settings-list", ListView)
+        settings_list.focus()
+        await pilot.pause()
+        settings_list.index = 4  # config-paths
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, ConfigPathsScreen)
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(app.screen, MainScreen)
+
+
+def test_settings_opens_config_paths():
+    run_async(_settings_opens_config_paths)
+
+
+async def _theme_choice_persists_across_launches() -> None:
+    app = AulaF99App()
+    async with app.run_test() as pilot:
+        app.theme = "nord"
+        await pilot.pause()
+
+    assert load_settings().theme == "nord"
+
+    reloaded = AulaF99App()
+    async with reloaded.run_test() as pilot:
+        assert reloaded.theme == "nord"
+        await pilot.pause()
+
+
+def test_theme_choice_persists_across_launches():
+    run_async(_theme_choice_persists_across_launches)

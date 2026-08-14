@@ -1,6 +1,6 @@
 [project]
 name = "aula-f99-controller"
-version = "0.1.0"
+version = "0.1.1"
 description = "Custom control software for the AULA F99 keyboard (RGB, macros) via its vendor HID protocol"
 readme = "README.md"
 license = "MIT"

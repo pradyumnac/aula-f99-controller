@@ -10,7 +10,7 @@ from textual.binding import Binding
 from textual.containers import Container, Horizontal
 from textual.screen import Screen
 from textual.widget import Widget
-from textual.widgets import ContentSwitcher, Footer, Header, Label, ListItem, ListView
+from textual.widgets import ContentSwitcher, DataTable, Footer, Header, Label, ListItem, ListView
 
 from aula_f99.detect import detect_connection, probe_active_link
 from aula_f99.tui.actions import SECTIONS, SECTIONS_BY_ID, Section
@@ -128,7 +128,25 @@ class MainScreen(Screen[None]):
             sidebar.focus()
 
     def action_focus_content(self) -> None:
+        # Focusing the container itself would strand hjkl/arrow navigation --
+        # give focus to the active panel's own interactive widget instead, if
+        # it has one.
+        switcher = self.query_one(ContentSwitcher)
+        if switcher.current is not None:
+            panel = switcher.get_child_by_id(switcher.current)
+            target = self._focus_target(panel)
+            if target is not None:
+                target.focus()
+                return
         self.query_one(ContentPane).focus()
+
+    @staticmethod
+    def _focus_target(panel: Widget) -> Widget | None:
+        for widget_type in (ListView, DataTable):
+            found = panel.query(widget_type)
+            if found:
+                return found.first()
+        return None
 
     def action_toggle_sidebar(self) -> None:
         sidebar = self.query_one(SectionList)

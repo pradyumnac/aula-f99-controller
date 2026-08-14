@@ -160,11 +160,11 @@ A section of this project's own. See
 
 | Feature | Status | Writes to device? | TUI location | CLI | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Settings pane list | Implemented | No | Settings | -- | Navigable list. Opens App keybindings; the rest are slice 4. |
-| Theme picker | Planned (slice 4) | No | Settings | -- | Any built-in Textual theme. |
-| Default link (wired/wireless) | Planned (slice 4) | No | Settings | -- | Removes the need for `--wired` on every command. |
-| Confirm-before-write toggle | Planned (slice 4) | No | Settings | -- | Default stays on. |
-| Config file paths (read-only display) | Planned (slice 4) | No | Settings | -- | XDG paths. |
+| Settings pane list | Implemented | No | Settings | -- | Navigable list. Opens App keybindings, the theme picker, and two more panes. |
+| Theme picker | Implemented | No | Settings | -- | Opens Textual's own command palette theme picker (`action_change_theme`). Choice saved to `settings.toml`. |
+| Default link (wired/wireless) | Implemented | No | Settings | -- | Toggled in place. Saved to `settings.toml`. No CLI consumer yet -- `--wired` still does the job until a write command reads this setting. |
+| Confirm-before-write toggle | Implemented | No | Settings | -- | Toggled in place. Default stays on. Saved to `settings.toml`. No write action reads it yet -- Lighting (slice 5) is the first consumer. |
+| Config file paths (read-only display) | Implemented | No | Settings | -- | XDG config and data directories, plus each file this project writes. |
 
 ## Ambient light bar
 
@@ -204,6 +204,6 @@ in software, separately from the physical key combination. See
 | Keys | 0 | 0 | 10 | 1 |
 | Macros | 0 | 0 | 3 | 0 |
 | Keybindings | 3 | 0 | 0 | 0 |
-| Settings | 1 | 4 | 0 | 0 |
+| Settings | 5 | 0 | 0 | 0 |
 | Ambient light bar | 0 | 0 | 0 | 4 |
 | Hardware-only shortcuts | 0 | 0 | 0 | 5 |

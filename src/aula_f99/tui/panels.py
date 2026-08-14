@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Protocol, runtime_checkable
 
 from textual.app import ComposeResult
@@ -10,6 +11,8 @@ from textual.widgets import DataTable, Label, ListItem, ListView, Static
 from aula_f99.detect import detect_connection
 from aula_f99.keybindings import load_keybindings
 from aula_f99.tui.app_keybindings import AppKeybindingsScreen
+from aula_f99.tui.config_paths import ConfigPathsScreen
+from aula_f99.tui.settings_store import LINK_MODES, load_settings, save_settings
 
 
 @runtime_checkable
@@ -82,14 +85,6 @@ class KeyboardKeybindingsPanel(Static):
 class SettingsPanel(Static):
     """Navigable list of settings panes."""
 
-    ENTRIES = [
-        ("app-keybindings", "App keybindings", "Rebind this app's keys."),
-        ("theme", "Theme", "Planned -- slice 4."),
-        ("default-link", "Default link", "Planned -- slice 4."),
-        ("confirm-writes", "Confirm before write", "Planned -- slice 4."),
-        ("config-paths", "Config paths", "Planned -- slice 4."),
-    ]
-
     DEFAULT_CSS = """
     SettingsPanel {
         height: 1fr;
@@ -100,22 +95,69 @@ class SettingsPanel(Static):
     }
     """
 
+    def __init__(self) -> None:
+        super().__init__()
+        self._settings = load_settings()
+
     def compose(self) -> ComposeResult:
-        yield Static("Enter opens the selected pane.", id="settings-hint")
+        yield Static("Enter opens or toggles the selected setting.", id="settings-hint")
         yield ListView(
-            *[
-                ListItem(Label(f"{title} -- {note}"), id=f"set-{entry_id}")
-                for entry_id, title, note in self.ENTRIES
-            ],
+            *[ListItem(Label(""), id=f"set-{entry_id}") for entry_id, _, _ in self._entries()],
             id="settings-list",
         )
 
+    def on_mount(self) -> None:
+        self._reload()
+
+    def refresh_content(self) -> None:
+        self._reload()
+
+    def _entries(self) -> list[tuple[str, str, str]]:
+        settings = self._settings
+        return [
+            ("app-keybindings", "App keybindings", "Rebind this app's keys."),
+            ("theme", "Theme", f"{self.app.theme} -- Enter opens the theme picker."),
+            ("default-link", "Default link", f"{settings.default_link} -- Enter toggles."),
+            (
+                "confirm-writes",
+                "Confirm before write",
+                f"{'on' if settings.confirm_writes else 'off'} -- Enter toggles.",
+            ),
+            ("config-paths", "Config paths", "Read-only. Enter to view."),
+        ]
+
+    def _reload(self) -> None:
+        # Update each row's label in place -- the rows themselves never change,
+        # only their text, so there's no need to clear and rebuild the list
+        # (which would also drop the cursor position).
+        for entry_id, title, note in self._entries():
+            self.query_one(f"#set-{entry_id} Label", Label).update(f"{title} -- {note}")
+
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-        if event.item.id is None:
+        if event.item is None or event.item.id is None:
             return
         event.stop()  # don't let the sidebar's handler see this
         entry_id = event.item.id.removeprefix("set-")
         if entry_id == "app-keybindings":
             self.app.push_screen(AppKeybindingsScreen())
-        else:
-            self.notify("Not implemented yet -- planned for slice 4.")
+        elif entry_id == "theme":
+            self.app.action_change_theme()
+        elif entry_id == "default-link":
+            self._toggle_default_link()
+        elif entry_id == "confirm-writes":
+            self._toggle_confirm_writes()
+        elif entry_id == "config-paths":
+            self.app.push_screen(ConfigPathsScreen())
+
+    def _toggle_default_link(self) -> None:
+        other = LINK_MODES[1 - LINK_MODES.index(self._settings.default_link)]
+        self._settings = replace(self._settings, default_link=other)
+        save_settings(self._settings)
+        self._reload()
+        self.notify(f"Default link is now {other}.")
+
+    def _toggle_confirm_writes(self) -> None:
+        self._settings = replace(self._settings, confirm_writes=not self._settings.confirm_writes)
+        save_settings(self._settings)
+        self._reload()
+        self.notify(f"Confirm before write is now {'on' if self._settings.confirm_writes else 'off'}.")

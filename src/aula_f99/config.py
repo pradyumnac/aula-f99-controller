@@ -14,9 +14,23 @@ def config_home() -> Path:
     return Path(override) if override else Path.home() / ".config"
 
 
+def data_home() -> Path:
+    """`XDG_DATA_HOME`, or `~/.local/share` when it is unset."""
+    override = os.environ.get("XDG_DATA_HOME")
+    return Path(override) if override else Path.home() / ".local" / "share"
+
+
 def config_dir() -> Path:
     return config_home() / APP_DIR_NAME
 
 
+def data_dir() -> Path:
+    return data_home() / APP_DIR_NAME
+
+
 def tui_keymap_path() -> Path:
     return config_dir() / "tui_keymap.toml"
+
+
+def settings_path() -> Path:
+    return config_dir() / "settings.toml"

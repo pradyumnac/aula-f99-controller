@@ -31,6 +31,8 @@ below says where implemented code lives, not what is implemented.
 | [`tui/app_keybindings.py`](../src/aula_f99/tui/app_keybindings.py) | The App keybindings screen, and applying a rebind |
 | [`tui/rebind.py`](../src/aula_f99/tui/rebind.py) | The modal that captures one key press |
 | [`tui/key_monitor.py`](../src/aula_f99/tui/key_monitor.py) | The key monitor modal |
+| [`tui/settings_store.py`](../src/aula_f99/tui/settings_store.py) | Persisted app settings (theme, default link, confirm-before-write), backed by TOML |
+| [`tui/config_paths.py`](../src/aula_f99/tui/config_paths.py) | The read-only Config paths screen |
 
 ### Detection functions
 

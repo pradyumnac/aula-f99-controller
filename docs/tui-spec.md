@@ -103,10 +103,14 @@ Settings is a list of panes. Selecting one opens it.
 | Setting | Effect |
 | --- | --- |
 | App keybindings | Open the [App keybindings](#app-keybindings) screen. |
-| Theme | Pick any built-in Textual theme. Saved. |
-| Default link | Which link commands target: wired or wireless. Removes the need for `--wired`. |
-| Confirm before write | Turn the write-confirmation dialog off. Default is on. |
+| Theme | Opens Textual's own command-palette theme picker (the same one `ctrl+p` -> "Change theme" reaches). Saved. |
+| Default link | Which link commands target: wired or wireless. Toggled in place. Removes the need for `--wired`. |
+| Confirm before write | Turn the write-confirmation dialog off. Default is on. Toggled in place. |
 | Config paths | Show where each config and data file lives. Read-only. |
+
+Default link and confirm-before-write are saved, but nothing reads them
+yet -- there is no write action in the TUI until Lighting (slice 5)
+lands. `--wired` still does the job on the CLI in the meantime.
 
 ### App keybindings
 
@@ -141,6 +145,7 @@ These rules apply to every file the program writes.
 | File | Path | Holds |
 | --- | --- | --- |
 | `tui_keymap.toml` | `$XDG_CONFIG_HOME/aula-f99/` | App keybinding overrides, as binding id to key. Absent until the first rebind. |
+| `settings.toml` | `$XDG_CONFIG_HOME/aula-f99/` | Theme, default link, confirm-before-write. Absent until the first change; each setting falls back to its default. |
 
 `config/f99_keybindings.toml` currently lives inside the repository. It
 must move to the XDG config path. The move needs a fallback so an existing
@@ -210,7 +215,7 @@ tests, and documentation.
 | 1 | Deepen Status: live link state, model identity, and whatever else is readable without a write. | Next |
 | 2 | The shell: sidebar, theme, content switcher, footer, key-monitor modal. | Done |
 | 3 | Keybindings: the factory `FN` shortcuts. This project's own bindings became the App keybindings screen, which also rebinds them. | Done |
-| 4 | Settings, including XDG storage and the saved theme. | Started -- the pane list and the keymap's XDG storage landed with slice 3. |
+| 4 | Settings, including XDG storage and the saved theme. | Done |
 | 5 | Lighting: solid colour, with the confirm-write modal. | Planned |
 | 6+ | Any section whose protocol gets captured. | Blocked |
 
