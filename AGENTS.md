@@ -18,6 +18,7 @@ Custom control terminal ui software for the AULA F99 keyboard: replicate as much
 | `docs/spec.md` | Project facts: modules, CLI reference, mise tasks, toolchain |
 | `docs/tui-spec.md` | TUI structure and design: layout, sections list, modals, theme, key-binding mechanics, slices |
 | `docs/feature-tracking.md` | Per-feature status, write-need, TUI location, and CLI switch -- one row per feature |
+| `docs/how-to/textual.md` | How to build screens with the Textual library: the rules this project applies |
 | `docs/reference/f99/hardware.md` | Physical device facts: layout, switch, ports, indicators, battery |
 | `docs/reference/f99/keybindings.md` | The keyboard's own factory `FN` shortcuts |
 | `docs/reference/f99/protocol.md` | USB protocol: device IDs, packet format, captured commands |

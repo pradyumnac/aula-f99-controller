@@ -1,0 +1,121 @@
+"""Content-pane widgets for the shell's sections."""
+
+from __future__ import annotations
+
+from typing import Protocol, runtime_checkable
+
+from textual.app import ComposeResult
+from textual.widgets import DataTable, Label, ListItem, ListView, Static
+
+from aula_f99.detect import detect_connection
+from aula_f99.keybindings import load_keybindings
+from aula_f99.tui.app_keybindings import AppKeybindingsScreen
+
+
+@runtime_checkable
+class Refreshable(Protocol):
+    """A panel that can re-fetch its own content on demand (the `r` binding)."""
+
+    def refresh_content(self) -> None: ...
+
+
+class NotImplementedPanel(Static):
+    def __init__(self, title: str) -> None:
+        super().__init__(f"{title} is not implemented yet.\n\nSee docs/tui-spec.md for the plan.")
+
+
+class StatusPanel(Static):
+    def on_mount(self) -> None:
+        self.refresh_content()
+
+    def refresh_content(self) -> None:
+        status = detect_connection()
+        lines = [
+            f"[b]Enumeration guess:[/b] {status.guessed_mode}",
+            "",
+            f"[b]Wired[/b] (VID_258A:PID_010C): "
+            f"{'present' if status.wired_present else 'not present'}"
+            + (f" -- {status.wired_product!r}" if status.wired_product else ""),
+            f"[b]Wireless dongle[/b] (VID_3554:PID_FA09): "
+            f"{'present' if status.wireless_dongle_present else 'not present'}"
+            + (f" -- {status.wireless_product!r}" if status.wireless_product else ""),
+            "",
+            "Press 'r' to prove the live link, or 'm' to open the key monitor.",
+        ]
+        self.update("\n".join(lines))
+
+
+class KeyboardKeybindingsPanel(Static):
+    """The keyboard's factory FN shortcuts. Reference text, not editable.
+
+    The TUI's own bindings live under Settings; see AppKeybindingsScreen.
+    """
+
+    DEFAULT_CSS = """
+    KeyboardKeybindingsPanel {
+        height: 1fr;
+    }
+    KeyboardKeybindingsPanel #kbd-hint {
+        height: auto;
+        padding: 0 0 1 0;
+    }
+    KeyboardKeybindingsPanel DataTable {
+        height: 1fr;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        yield Static(
+            "The keyboard's own FN shortcuts. The firmware handles these.\nFor this app's keys, press '?'.",
+            id="kbd-hint",
+        )
+        yield DataTable[str](id="kbd-keys", cursor_type="row")
+
+    def on_mount(self) -> None:
+        table = self.query_one("#kbd-keys", DataTable)
+        table.add_columns("Shortcut", "Effect", "Category")
+        for shortcut in load_keybindings():
+            if shortcut.shortcut:
+                table.add_row(shortcut.shortcut, shortcut.effect, shortcut.category)
+
+
+class SettingsPanel(Static):
+    """Navigable list of settings panes."""
+
+    ENTRIES = [
+        ("app-keybindings", "App keybindings", "Rebind this app's keys."),
+        ("theme", "Theme", "Planned -- slice 4."),
+        ("default-link", "Default link", "Planned -- slice 4."),
+        ("confirm-writes", "Confirm before write", "Planned -- slice 4."),
+        ("config-paths", "Config paths", "Planned -- slice 4."),
+    ]
+
+    DEFAULT_CSS = """
+    SettingsPanel {
+        height: 1fr;
+    }
+    SettingsPanel #settings-hint {
+        height: auto;
+        padding: 0 0 1 0;
+    }
+    """
+
+    def compose(self) -> ComposeResult:
+        yield Static("Enter opens the selected pane.", id="settings-hint")
+        yield ListView(
+            *[
+                ListItem(Label(f"{title} -- {note}"), id=f"set-{entry_id}")
+                for entry_id, title, note in self.ENTRIES
+            ],
+            id="settings-list",
+        )
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        if event.item.id is None:
+            return
+        event.stop()  # don't let the sidebar's handler see this
+        entry_id = event.item.id.removeprefix("set-")
+        if entry_id == "app-keybindings":
+            self.app.push_screen(AppKeybindingsScreen())
+        else:
+            self.notify("Not implemented yet -- planned for slice 4.")

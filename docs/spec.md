@@ -23,7 +23,14 @@ below says where implemented code lives, not what is implemented.
 | [`usage_codes.py`](../src/aula_f99/usage_codes.py) | Parses a raw Consumer Control report: release detection, usage-code extraction, display formatting |
 | [`keybindings.py`](../src/aula_f99/keybindings.py) | Every known FN shortcut, and the Consumer Control usage-code lookup table, backed by TOML |
 | [`cli.py`](../src/aula_f99/cli.py) | Command-line entry point |
-| [`tui/app.py`](../src/aula_f99/tui/app.py) | The terminal interface |
+| [`config.py`](../src/aula_f99/config.py) | Where this project's files live, under the XDG layout |
+| [`tui/app.py`](../src/aula_f99/tui/app.py) | The `App` subclass: title, theme, quit binding, entry point |
+| [`tui/actions.py`](../src/aula_f99/tui/actions.py) | Every section and rebindable action, and the saved keymap |
+| [`tui/main_screen.py`](../src/aula_f99/tui/main_screen.py) | The shell: sidebar, content switcher, key bindings, layout CSS |
+| [`tui/panels.py`](../src/aula_f99/tui/panels.py) | The content panel for each section |
+| [`tui/app_keybindings.py`](../src/aula_f99/tui/app_keybindings.py) | The App keybindings screen, and applying a rebind |
+| [`tui/rebind.py`](../src/aula_f99/tui/rebind.py) | The modal that captures one key press |
+| [`tui/key_monitor.py`](../src/aula_f99/tui/key_monitor.py) | The key monitor modal |
 
 ### Detection functions
 
@@ -83,7 +90,20 @@ Each feature's own CLI switch, if it has one, is listed in
 ## Terminal interface
 
 The interface design is specified in
-[reference/tui-spec.md](tui-spec.md).
+[reference/tui-spec.md](tui-spec.md). For the rules this project applies
+when it builds a screen, see [how-to/textual.md](how-to/textual.md).
+
+[`tui/actions.py`](../src/aula_f99/tui/actions.py) holds two registries,
+both single sources of truth:
+
+| Registry | Drives |
+| --- | --- |
+| `SECTIONS` | The sidebar, the content switcher, and each section's hotkey. Adding a section means adding one entry. |
+| `ACTIONS` | Every rebindable key, and the App keybindings screen. Section entries are generated from `SECTIONS`, so a new section brings its hotkey along. |
+
+A saved override maps a binding id to a key. Textual applies it through
+`App.set_keymap`, so a rebind needs no code change and takes effect
+without a restart.
 
 ## mise tasks
 

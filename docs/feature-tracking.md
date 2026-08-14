@@ -149,8 +149,9 @@ this table: read-only reference, no protocol needed.
 
 | Feature | Status | Writes to device? | TUI location | CLI | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Show the keyboard's factory FN shortcuts | Planned | No | Keybindings | -- | Source: [keybindings.md](reference/f99/keybindings.md), transcribed into [`config/f99_keybindings.toml`](../config/f99_keybindings.toml). Data and loader exist ([`keybindings.py`](../src/aula_f99/keybindings.py)); no screen shows it yet -- waiting on the Keybindings section (slice 3). |
-| Show this project's own TUI key bindings | Planned | No | Keybindings | -- | Depends on the binding set landing in slice 2. |
+| Show the keyboard's factory FN shortcuts | Implemented | No | Keybindings | -- | Source: [keybindings.md](reference/f99/keybindings.md), transcribed into [`config/f99_keybindings.toml`](../config/f99_keybindings.toml), loaded by [`keybindings.py`](../src/aula_f99/keybindings.py). |
+| Show this project's own TUI key bindings | Implemented | No | App keybindings (Settings, or `?`) | -- | Specified in [tui-spec.md](tui-spec.md#app-keybindings). Kept apart from the keyboard's own shortcuts. |
+| Rebind this project's TUI key bindings | Implemented | No | App keybindings (Settings, or `?`) | -- | Saved by binding id to `tui_keymap.toml`. Live, no restart. |
 
 ## Settings
 
@@ -159,6 +160,7 @@ A section of this project's own. See
 
 | Feature | Status | Writes to device? | TUI location | CLI | Notes |
 | --- | --- | --- | --- | --- | --- |
+| Settings pane list | Implemented | No | Settings | -- | Navigable list. Opens App keybindings; the rest are slice 4. |
 | Theme picker | Planned (slice 4) | No | Settings | -- | Any built-in Textual theme. |
 | Default link (wired/wireless) | Planned (slice 4) | No | Settings | -- | Removes the need for `--wired` on every command. |
 | Confirm-before-write toggle | Planned (slice 4) | No | Settings | -- | Default stays on. |
@@ -201,7 +203,7 @@ in software, separately from the physical key combination. See
 | Music | 0 | 0 | 13 | 0 |
 | Keys | 0 | 0 | 10 | 1 |
 | Macros | 0 | 0 | 3 | 0 |
-| Keybindings | 0 | 2 | 0 | 0 |
-| Settings | 0 | 4 | 0 | 0 |
+| Keybindings | 3 | 0 | 0 | 0 |
+| Settings | 1 | 4 | 0 | 0 |
 | Ambient light bar | 0 | 0 | 0 | 4 |
 | Hardware-only shortcuts | 0 | 0 | 0 | 5 |
